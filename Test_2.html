@@ -23,7 +23,7 @@
     .column {
       flex: 1;
       padding: 20px;
-      border: 3px solid #a22323;
+      border: 3px solid #00f91d;
       border-radius: 5px;
     }
     textarea {
@@ -32,6 +32,8 @@
       margin-bottom: 10px;
       padding: 10px;
       font-family: "Courier Mono", "Courier New", monospace;
+      font-size: 16px;
+      line-height: 1.4;
     }
     button {
       padding: 10px 20px;
@@ -46,14 +48,6 @@
     button:hover {
       background-color: #e5e5e5;
     }
-    .highlight {
-      background-color: yellow;
-    }
-    .attribution {
-      font-size: 0.8em;
-      margin-top: 20px;
-      text-align: center;
-    }
     #inputDisplay {
       width: 100%;
       min-height: 300px;
@@ -63,28 +57,17 @@
       font-family: "Courier Mono", "Courier New", monospace;
       white-space: pre-wrap;
       overflow-y: auto;
+      font-size: 16px;
+      line-height: 1.4;
     }
-    #status {
-      text-align: center;
-      padding: 10px;
-      margin: 10px 20px;
-      display: none;
-      border-radius: 5px;
-    }
-    .success {
-      background-color: #dff0d8;
-      color: #3c763d;
-    }
-    .error {
-      background-color: #f2dede;
-      color: #a94442;
+    .highlight {
+      background-color: yellow !important;
+      padding: 2px 0;
     }
   </style>
 </head>
 <body>
   <h1>CHECK YOUR TEXT HERE</h1>
-  
-  <div id="status"></div>
   
   <div class="container">
     <div class="column">
@@ -105,47 +88,33 @@
     </div>
   </div>
 
-  <div class="attribution">
-    Word list from: <a href="https://github.com/A3g-Design/PostBinaryTypeLab/blob/main/Gegenderte_Begriffe_Schweiz.csv" target="_blank">Swiss Gender-Neutral Terms Database</a>
-  </div>
-
   <script>
-    // Initialize wordList with some default entries
-    let wordList = {
-      'Lehrer': 'Lehrperson',
-      'Schüler': 'Lernende',
-      'Mitarbeiter': 'Mitarbeitende',
-      'Kunde': 'Kundschaft'
-    };
+    let wordList = {};
+    const GITHUB_CSV_URL = 'https://raw.githubusercontent.com/A3g-Design/PostBinaryTypeLab/main/Gegenderte_Begriffe_Schweiz.csv';
 
-    async function loadCSV() {
-      const fileInput = document.getElementById('csvFile');
-      const file = fileInput.files[0];
-      
-      if (file) {
-        try {
-          const text = await file.text();
-          const rows = text.split('\n');
-          
-          // Clear existing wordList
-          wordList = {};
-          
-          // Process each row
-          rows.forEach(row => {
-            if (row.trim()) {
-              const [original, replacement] = row.split(',').map(item => item.trim());
-              if (original && replacement) {
-                wordList[original] = replacement;
-              }
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await fetch(GITHUB_CSV_URL);
+        if (!response.ok) throw new Error('Could not load word list');
+        const text = await response.text();
+        
+        const rows = text.split('\n');
+        rows.forEach(row => {
+          if (row.trim()) {
+            const [original, replacement] = row.split(',').map(item => item.trim());
+            if (original && replacement) {
+              const stem = original.toLowerCase().replace(/[*].*$/, '');
+              wordList[stem] = {
+                original: original,
+                replacement: replacement
+              };
             }
-          });
-          
-          alert('Word list loaded successfully!');
-        } catch (error) {
-          alert('Error loading CSV file: ' + error.message);
-        }
+          }
+        });
+      } catch (error) {
+        console.error('Error loading word list:', error);
       }
-    }
+    });
 
     function clearText() {
       document.getElementById('inputText').value = '';
@@ -174,27 +143,58 @@
       textarea.style.display = 'none';
       displayDiv.style.display = 'block';
       
-      // Highlight all matching words
-      for (const oldWord of Object.keys(wordList)) {
-        const regex = new RegExp(`\\b${oldWord}\\b`, 'gi');
-        text = text.replace(regex, match => `<mark>${match}</mark>`);
-      }
+      // Split text into words while preserving spaces and punctuation
+      const words = text.match(/\b\w+\b|\s+|[.,!?;]/g) || [];
+      let highlightedText = '';
+      let hasHighlights = false;
       
-      displayDiv.innerHTML = text;
+      words.forEach(word => {
+        const wordLower = word.toLowerCase().trim();
+        if (wordLower) {
+          let found = false;
+          for (const [stem, data] of Object.entries(wordList)) {
+            if (wordLower === stem || wordLower.startsWith(stem)) {
+              highlightedText += `<span class="highlight" title="Wird ersetzt durch: ${data.replacement}">${word}</span>`;
+              found = true;
+              hasHighlights = true;
+              break;
+            }
+          }
+          if (!found) {
+            highlightedText += word;
+          }
+        } else {
+          highlightedText += word;
+        }
+      });
       
-      // Enable adapt button only if there are highlights
-      document.getElementById('adaptButton').disabled = !text.includes('<mark>');
+      displayDiv.innerHTML = highlightedText;
+      document.getElementById('adaptButton').disabled = !hasHighlights;
     }
 
     function adaptText() {
       const inputText = document.getElementById('inputText').value;
-      let outputText = inputText;
-
-      // Replace each word in the wordList
-      for (const [oldWord, newWord] of Object.entries(wordList)) {
-        const regex = new RegExp(`\\b${oldWord}\\b`, 'gi');
-        outputText = outputText.replace(regex, newWord);
-      }
+      const words = inputText.match(/\b\w+\b|\s+|[.,!?;]/g) || [];
+      let outputText = '';
+      
+      words.forEach(word => {
+        const wordLower = word.toLowerCase().trim();
+        if (wordLower) {
+          let found = false;
+          for (const [stem, data] of Object.entries(wordList)) {
+            if (wordLower === stem || wordLower.startsWith(stem)) {
+              outputText += data.replacement;
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            outputText += word;
+          }
+        } else {
+          outputText += word;
+        }
+      });
 
       document.getElementById('outputText').value = outputText;
     }
