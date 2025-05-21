@@ -51,11 +51,22 @@
       white-space: pre-wrap;
       overflow-y: auto;
     }
+    .file-upload {
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
   <h1>CHECK YOUR TEXT HERE</h1>
   
+  <div class="file-upload">
+    <label for="csvFile">Upload Word List (CSV): </label>
+    <input type="file" id="csvFile" accept=".csv" onchange="loadCSV()">
+  </div>
+
   <div class="container">
     <div class="column">
       <h2>Original Text</h2>
@@ -81,21 +92,42 @@
   </div>
 
   <script>
-    // Sample word list from geschicktgendern.de
-    const wordList = {
+    // Initialize wordList with some default entries
+    let wordList = {
       'Lehrer': 'Lehrperson',
       'Schüler': 'Lernende',
-      'Abenteurer': 'abenteuerliebende Person',
-      'Abgeordneter': 'abgeordnete Person',
-      'Absolvent': 'Person mit Abschluss',
-      'Administrator': 'Administration',
-      'Adressat': 'adressierte Person',
-      'Agent': 'auskundschaftende Person',
       'Mitarbeiter': 'Mitarbeitende',
-      'Kunde': 'Kundschaft',
-      'Benutzer': 'Benutzende',
-      'Teilnehmer': 'Teilnehmende'
+      'Kunde': 'Kundschaft'
     };
+
+    async function loadCSV() {
+      const fileInput = document.getElementById('csvFile');
+      const file = fileInput.files[0];
+      
+      if (file) {
+        try {
+          const text = await file.text();
+          const rows = text.split('\n');
+          
+          // Clear existing wordList
+          wordList = {};
+          
+          // Process each row
+          rows.forEach(row => {
+            if (row.trim()) {
+              const [original, replacement] = row.split(',').map(item => item.trim());
+              if (original && replacement) {
+                wordList[original] = replacement;
+              }
+            }
+          });
+          
+          alert('Word list loaded successfully!');
+        } catch (error) {
+          alert('Error loading CSV file: ' + error.message);
+        }
+      }
+    }
 
     function clearText() {
       document.getElementById('inputText').value = '';
