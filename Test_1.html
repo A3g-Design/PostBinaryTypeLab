@@ -25,6 +25,7 @@
       margin-bottom: 10px;
       padding: 10px;
       font-family: "Courier Mono", "Courier New", monospace;
+      font-size: 24px;  /* Add this line to make text bigger */
     }
     button {
       padding: 10px 20px;
@@ -32,6 +33,7 @@
       margin-bottom: 10px;
       cursor: pointer;
       font-family: "Courier Mono", "Courier New", monospace;
+      font-size: 18px;  /* Add this line to make text bigger */
     }
     .highlight {
       background-color: yellow;
@@ -48,6 +50,7 @@
       padding: 10px;
       border: 1px solid #ccc;
       font-family: "Courier Mono", "Courier New", monospace;
+      font-size: 24px;  /* Add this line to make text bigger */
       white-space: pre-wrap;
       overflow-y: auto;
     }
@@ -83,8 +86,8 @@
   <script>
     // Sample word list from geschicktgendern.de
     const wordList = {
-      'Lehrer': 'Lehrperson',
-      'Schüler': 'Lernende',
+      'der Lehrer': 'Die Lehrperson',
+      'Schüler': 'Lernenden',
       'Abenteurer': 'abenteuerliebende Person',
       'Abgeordneter': 'abgeordnete Person',
       'Absolvent': 'Person mit Abschluss',
@@ -94,7 +97,8 @@
       'Mitarbeiter': 'Mitarbeitende',
       'Kunde': 'Kundschaft',
       'Benutzer': 'Benutzende',
-      'Teilnehmer': 'Teilnehmende'
+      'Teilnehmer': 'Teilnehmenden',
+      'Kollegen': 'Kolleg*innen'
     };
 
     function clearText() {
