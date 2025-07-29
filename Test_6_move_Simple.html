@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>15 Parallax Color Boxes - Random Sizes & Positions</title>
+  <style>
+    @font-face {
+      font-family: "ArDINdong 2";
+      src: url('fonts/ArDINdong 2.woff2') format('woff2'),
+           url('fonts/ArDINdong 2.woff') format('woff'),
+           url('fonts/ArDINdong 2.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    html, body {
+      height: 100%;
+      margin: 0;
+      /* overflow: hidden; */ /* Removed to enable scrolling */
+      background: url('Sujet2_E.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    #tunnel-container {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      /* overflow: hidden; */ /* Removed to enable scrolling */
+    }
+    #tunnel {
+      width: 100vw;
+      height: 100vh;
+      -webkit-perspective: 300px;
+      -moz-perspective: 300px;
+      perspective: 300px;
+      -webkit-perspective-origin: 50% 50%;
+      -moz-perspective-origin: 50% 50%;
+      perspective-origin: 50% 50%;
+      -webkit-transform-style: preserve-3d;
+      -moz-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+    .marco {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.2);
+      font-size: 2.5rem;
+      font-family: "ArDINdong 2", sans-serif;
+      font-feature-settings: "ss01" on;
+      color: #fff;
+      font-weight: bold;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: box-shadow 0.3s;
+      opacity: 0.95;
+      /* Add greyscale filter to background images */
+      filter: grayscale(100%);
+      -webkit-filter: grayscale(100%);
+    }
+    
+    .content-text {
+      font-family: "ArDINdong 2", sans-serif !important;
+      font-size: 1.5rem;
+      font-weight: bold;
+      font-feature-settings: "ss01" on;
+      text-align: center;
+      z-index: 10;
+      position: relative;
+      color: inherit;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    /* 15 different background colors */
+    .color1  { background: #e57373; }
+    .color2  { background: #f06292; }
+    .color3  { background: #ba68c8; }
+    .color4  { background: #64b5f6; }
+    .color5  { background: #4dd0e1; }
+    .color6  { background: #81c784; }
+    .color7  { background: #dce775; color: #333; }
+    .color8  { background: #ffd54f; color: #333; }
+    .color9  { background: #ffb74d; color: #333; }
+    .color10 { background: #a1887f; }
+    .color11 { background: #90a4ae; }
+    .color12 { background: #f44336; }
+    .color13 { background: #9c27b0; }
+    .color14 { background: #2196f3; }
+    .color15 { background: #009688; }
+    /* Unique sizes and positions for each box */
+    .marco1  { width: 200px; height: 200px; left: 5vw;  top: 10vh; }
+    .marco2  { width: 300px; height: 120px; left: 60vw; top: 5vh; }
+    .marco3  { width: 180px; height: 250px; left: 20vw; top: 60vh; }
+    .marco4  { width: 350px; height: 180px; left: 40vw; top: 30vh; }
+    .marco5  { width: 120px; height: 120px; left: 80vw; top: 70vh; }
+    .marco6  { width: 220px; height: 180px; left: 10vw; top: 50vh; }
+    .marco7  { width: 160px; height: 300px; left: 70vw; top: 40vh; }
+    .marco8  { width: 250px; height: 150px; left: 30vw; top: 75vh; }
+    .marco9  { width: 140px; height: 140px; left: 55vw; top: 60vh; }
+    .marco10 { width: 320px; height: 100px; left: 15vw; top: 20vh; }
+    .marco11 { width: 100px; height: 200px; left: 85vw; top: 20vh; }
+    .marco12 { width: 180px; height: 180px; left: 35vw; top: 10vh; }
+    .marco13 { width: 220px; height: 220px; left: 75vw; top: 80vh; }
+    .marco14 { width: 150px; height: 250px; left: 5vw;  top: 80vh; }
+    .marco15 { width: 200px; height: 120px; left: 60vw; top: 85vh; }
+  </style>
+</head>
+<body>
+  <div id="tunnel-container">
+    <div id="tunnel">
+      <div class="marco color1  marco1"><div class="content-text">01</div></div>
+      <div class="marco color2  marco2"><div class="content-text">02</div></div>
+      <div class="marco color3  marco3"><div class="content-text">03</div></div>
+      <div class="marco color4  marco4"><div class="content-text">04</div></div>
+      <div class="marco color5  marco5"><div class="content-text">05</div></div>
+      <div class="marco color6  marco6"><div class="content-text">06</div></div>
+      <div class="marco color7  marco7"><div class="content-text">07</div></div>
+      <div class="marco color8  marco8"><div class="content-text">08</div></div>
+      <div class="marco color9  marco9"><div class="content-text">09</div></div>
+      <div class="marco color10 marco10"><div class="content-text">10</div></div>
+      <div class="marco color11 marco11"><div class="content-text">11</div></div>
+      <div class="marco color12 marco12"><div class="content-text">12</div></div>
+      <div class="marco color13 marco13"><div class="content-text">13</div></div>
+      <div class="marco color14 marco14"><div class="content-text">14</div></div>
+      <div class="marco color15 marco15"><div class="content-text">15</div></div>
+    </div>
+  </div>
+  <!-- Dummy div to enable scrolling -->
+  <div style="height: 3000px;"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+    // Parallax scroll effect for 15 boxes with scaling
+    var lastPos = document.body.scrollTop || document.documentElement.scrollTop,
+        perspective = 300,
+        zSpacing = -200,
+        zVals = [],
+        $frames = $(".marco"),
+        frames = $frames.toArray(),
+        numFrames = $frames.length;
+
+    // Array of image filenames
+    var images = [
+      'Test1.png', 'Test2.png', 'Test3.png', 'Test4.png',
+      'Test5.png', 'Test6.png', 'Test7.png', 'Test8.png',
+      'Test9.png', 'Test10.png', 'Test11.png'
+    ];
+    // Randomly assign images to boxes
+    frames.forEach(function(frame) {
+      var img = images[Math.floor(Math.random() * images.length)];
+      frame.style.backgroundImage = 'url(' + img + ')';
+      frame.style.backgroundSize = 'cover';
+      frame.style.backgroundPosition = 'center';
+    });
+
+    for(var i=0; i<numFrames; i++) {
+      zVals.push((numFrames-i)*zSpacing);
+      // Set initial Z position and scale
+      var scale = Math.max(0.5, 2 + zVals[i] / 1000);
+      frames[i].style.transform = "translateZ(" + zVals[i] + "px) scale(" + scale + ")";
+      frames[i].style.webkitTransform = "translateZ(" + zVals[i] + "px) scale(" + scale + ")";
+      frames[i].style.mozTransform = "translateZ(" + zVals[i] + "px) scale(" + scale + ")";
+    }
+
+    $(window).on('scroll', function() {
+      var top = document.body.scrollTop || document.documentElement.scrollTop,
+          delta = lastPos - top;
+      lastPos = top;
+      for(var i=0; i<numFrames; i++){
+        var newZVal = (zVals[i] += (delta*-1.5)),
+            marco = frames[i],
+            scale = Math.max(0.5, 2 + newZVal / 1000),
+            transform = "translateZ(" + newZVal + "px) scale(" + scale + ")",
+            opacity = newZVal < 1 ? 1 : 1 - Math.min(1, Math.abs((newZVal-50)/(perspective-50))),
+            display = newZVal > perspective ? "none" : "flex";
+        marco.style.webkitTransform = transform;
+        marco.style.mozTransform = transform;
+        marco.style.transform = transform;
+        marco.style.display = display;
+        marco.style.opacity = opacity;
+      }
+    });
+  </script>
+</body>
+</html>
