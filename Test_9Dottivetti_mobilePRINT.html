@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tipe * before non-binary ending, it will automatically adapt.</title>
+  <style>
+    @font-face {
+      font-family: "DottivettiNB2";
+      src: url('fonts/DottivettiNB2.woff2') format('woff2'),
+           url('fonts/DottivettiNB2.woff') format('woff'),
+           url('fonts/DottivettiNB2.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    body {
+      font-family:  "DottivettiNB2";
+      margin: 0;
+      padding: 20px;
+      background-color: #ffffff;
+      min-height: 100vh;
+    }
+    
+    h1 {
+      text-align: left;
+      margin: 0;
+      font-size: clamp(12px, 3vw, 18px);
+      line-height: 1.2;
+      font-weight: normal;
+    }
+    
+    .title-section {
+      margin: 5px 0 2px 0;
+      padding: 0;
+    }
+    
+    .container {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      width: 100%;
+      min-height: 400px;
+    }
+    
+    .column {
+      width: 100%;
+      height: 100%;
+      padding: clamp(5px, 2vw, 10px) clamp(20px, 4vw, 40px);
+      border-top: 6px solid #223d35;
+      background-color: #ffffff;
+      position: relative;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 20px;
+    }
+    
+    .text-container {
+      width: 100%;
+      max-width: 55vw;
+      aspect-ratio: 5/4;
+      margin-top: 8px;
+      border: 2px dashed #223d35;
+      border-radius: 20px;
+      padding: 15px;
+      background-color: #ffffff;
+    }
+
+    .instruction-container {
+      width: 100%;
+      max-width: 25vw;
+      aspect-ratio: 5/4;
+      margin-top: 8px;
+      border: none;
+      padding: 15px;
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .instruction-text {
+      font-family: "DottivettiNB2", sans-serif;
+      font-size: clamp(14px, 2vw, 20px);
+      color: #223d35;
+      text-align: center;
+      font-feature-settings: "ss01" 1;
+      -webkit-font-feature-settings: "ss01" 1;
+      -moz-font-feature-settings: "ss01" 1;
+    }
+    
+    .button-container {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 1000;
+    }
+    
+    .header-container {
+      position: static;
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .feature-selector {
+      display: flex;
+      gap: clamp(5px, 2vw, 10px);
+      flex-wrap: wrap;
+    }
+    
+    .feature-selector button {
+      padding: clamp(8px, 2vw, 12px) clamp(16px, 4vw, 24px);
+      font-size: clamp(14px, 3.5vw, 19.2px);
+      background-color: #ffffff;
+      color: #223d35;
+      border: 2px solid #223d35;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: "DottivettiNB2", sans-serif;
+      white-space: nowrap;
+    }
+    
+    .feature-selector button:hover {
+      background-color: #223d35;
+      color: #ffffff;
+    }
+    
+    .feature-selector button.active {
+      background-color: #223d35;
+      color: #ffffff;
+    }
+    
+    .feature-button {
+      padding: clamp(8px, 2vw, 12px) clamp(16px, 4vw, 24px);
+      font-size: clamp(14px, 3.5vw, 19.2px);
+      background-color: #ff6b6b;
+      color: #ffffff;
+      border: 2px solid #ff6b6b;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: "DottivettiNB2", sans-serif;
+    }
+    
+    .feature-button:hover {
+      background-color: #ffffff;
+      color: #ff6b6b;
+    }
+
+    .feature-selector-style {
+      padding: clamp(8px, 2vw, 12px) clamp(16px, 4vw, 24px);
+      font-size: clamp(14px, 3.5vw, 19.2px);
+      background-color: #ffffff;
+      color: #ff6b6b;
+      border: 2px solid #ff6b6b;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: "DottivettiNB2", sans-serif;
+      white-space: nowrap;
+    }
+
+    .feature-selector-style:hover {
+      background-color: #ff6b6b;
+      color: #ffffff;
+    }
+
+    #inputText {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: "DottivettiNB2", sans-serif;
+      font-size: clamp(18px, 8vw, 80pt);
+      line-height: 1.3;
+      border: none;
+      background-color: transparent;
+      outline: none;
+      white-space: pre-wrap;
+      position: relative;
+      overflow: hidden;
+      caret-color: red;
+      animation: blink-caret 1s step-end infinite;
+      font-feature-settings: "ss01" 1;
+      -webkit-font-feature-settings: "ss01" 1;
+      -moz-font-feature-settings: "ss01" 1;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    @keyframes blink-caret {
+      from, to { caret-color: red; }
+      50% { caret-color: transparent; }
+    }
+
+    #inputDisplay {
+      width: 100%;
+      min-height: 300px;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-family: "DottivettiNB2";
+      white-space: pre-wrap;
+      overflow-y: auto;
+      font-size: clamp(12px, 3vw, 16px);
+      line-height: 1.4;
+      background-color: #ffffff;
+    }
+    
+    .highlight {
+      background-color: yellow !important;
+      padding: 2px 0;
+    }
+    
+        /* Print styles */
+    @media print {
+      body {
+        margin: 0;
+        padding: 0;
+        background: white;
+      }
+      
+      .header-container,
+      .button-container,
+      .instruction-container {
+        display: none !important;
+      }
+      
+      .container {
+        margin: 0;
+        width: 50mm; /* 5cm width */
+        height: 40mm; /* 4cm height */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      
+      .column {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        border: none;
+        background: white;
+        margin: 0;
+        display: block;
+      }
+      
+      .text-container {
+        width: 50mm;
+        height: 40mm;
+        margin: 0;
+        border: 2px dashed #000000;
+        border-radius: 0;
+        padding: 2mm;
+        background: white;
+        aspect-ratio: 5/4;
+      }
+     
+     #inputText {
+       width: 100%;
+       height: 100%;
+       padding: 0;
+       margin: 0;
+       font-size: 8pt;
+       line-height: 1.2;
+       border: none;
+       background: transparent;
+       color: black;
+       overflow: visible;
+       white-space: normal;
+       word-wrap: normal;
+       overflow-wrap: normal;
+       font-feature-settings: "ss01" 1;
+       -webkit-font-feature-settings: "ss01" 1;
+       -moz-font-feature-settings: "ss01" 1;
+     }
+     
+     #inputDisplay {
+       display: none !important;
+     }
+     
+     /* Ensure text is visible and printable */
+     * {
+       -webkit-print-color-adjust: exact;
+       color-adjust: exact;
+     }
+   }
+    
+    /* Mobile-specific adjustments */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .container {
+        margin-top: 140px;
+        height: calc(100vh - 180px);
+      }
+      
+      .header-container {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+      }
+      
+      .button-container {
+        bottom: 10px;
+        left: 10px;
+      }
+      
+      .column {
+        padding: 15px;
+      }
+      
+      #inputText {
+        font-size: clamp(48px, 12vw, 60pt);
+        padding: 0 10px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .feature-selector {
+        justify-content: center;
+      }
+      
+      .feature-selector button {
+        flex: 1;
+        min-width: 80px;
+      }
+      
+      h1 {
+        text-align: center;
+        font-size: clamp(10px, 4vw, 16px);
+        font-weight: normal;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header-container">
+    <div class="feature-selector">
+      <button onclick="setFeature('ss01')" class="active">Standard</button>
+      <button onclick="setFeature('ss03')">Plus</button>
+      <button onclick="setFeature('ss02')">Flow</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="column">
+      <!-- Top line is the border-top of this column -->
+
+      <div class="text-container">
+        <div id="inputText" contenteditable="true"></div>
+        <div id="inputDisplay" style="display: none;"></div>
+      </div>
+      <div class="instruction-container">
+        <div class="instruction-text">hello bonjour</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="button-container">
+    <button class="feature-selector-style" onclick="resetPage()">Reset</button>
+    <button class="feature-selector-style" onclick="window.print()">Print</button>
+  </div>
+
+  <script>
+    function setFeature(feature) {
+      const inputText = document.getElementById('inputText');
+      const buttons = document.querySelectorAll('.feature-selector button');
+      
+      // Remove active class from all buttons
+      buttons.forEach(button => button.classList.remove('active'));
+      
+      // Add active class to clicked button
+      event.target.classList.add('active');
+      
+      // Set font feature based on selection
+      switch(feature) {
+        case 'ss01':
+          inputText.style.fontFeatureSettings = '"ss01" 1';
+          inputText.style.webkitFontFeatureSettings = '"ss01" 1';
+          inputText.style.mozFontFeatureSettings = '"ss01" 1';
+          break;
+        case 'ss02':
+          inputText.style.fontFeatureSettings = '"ss02" 1';
+          inputText.style.webkitFontFeatureSettings = '"ss02" 1';
+          inputText.style.mozFontFeatureSettings = '"ss02" 1';
+          break;
+        case 'ss03':
+          inputText.style.fontFeatureSettings = '"ss03" 1';
+          inputText.style.webkitFontFeatureSettings = '"ss03" 1';
+          inputText.style.mozFontFeatureSettings = '"ss03" 1';
+          break;
+      }
+    }
+    
+    function resetPage() {
+      document.getElementById('inputText').innerHTML = '';
+      window.location.reload(true);
+    }
+    
+    // Auto-focus the input area when page loads
+    window.addEventListener('load', function() {
+      document.getElementById('inputText').focus();
+    });
+    
+    let wordList = {};
+    const GITHUB_CSV_URL = 'https://raw.githubusercontent.com/A3g-Design/PostBinaryTypeLab/main/Gegenderte_Begriffe_Schweiz.csv';
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await fetch(GITHUB_CSV_URL);
+        if (!response.ok) throw new Error('Could not load word list');
+        const text = await response.text();
+        
+        const rows = text.split('\n');
+        rows.forEach(row => {
+          if (row.trim()) {
+            const [original, replacement] = row.split(',').map(item => item.trim());
+            if (original && replacement) {
+              const stem = original.toLowerCase().replace(/[*].*$/, '');
+              wordList[stem] = {
+                original: original,
+                replacement: replacement
+              };
+            }
+          }
+        });
+      } catch (error) {
+        console.error('Error loading word list:', error);
+      }
+    });
+
+    function clearText() {
+      document.getElementById('inputText').value = '';
+      document.getElementById('inputDisplay').innerHTML = '';
+      document.getElementById('adaptButton').disabled = true;
+    }
+
+    async function pasteText() {
+      try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById('inputText').value = text;
+      } catch (err) {
+        alert('Failed to paste text. Please paste manually using Ctrl+V or Cmd+V');
+      }
+    }
+
+    function checkText() {
+      const textarea = document.getElementById('inputText');
+      const displayDiv = document.getElementById('inputDisplay');
+      let text = textarea.value;
+      
+      // Hide textarea and show display div
+      textarea.style.display = 'none';
+      displayDiv.style.display = 'block';
+      
+      // Split text into words while preserving spaces and punctuation
+      const words = text.match(/\b\w+\b|\s+|[.,!?;]/g) || [];
+      let highlightedText = '';
+      let hasHighlights = false;
+      
+      words.forEach(word => {
+        const wordLower = word.toLowerCase().trim();
+        if (wordLower) {
+          let found = false;
+          for (const [stem, data] of Object.entries(wordList)) {
+            if (wordLower === stem || wordLower.startsWith(stem)) {
+              highlightedText += `<span class="highlight" title="Wird ersetzt durch: ${data.replacement}">${word}</span>`;
+              found = true;
+              hasHighlights = true;
+              break;
+            }
+          }
+          if (!found) {
+            highlightedText += word;
+          }
+        } else {
+          highlightedText += word;
+        }
+      });
+      
+      displayDiv.innerHTML = highlightedText;
+      document.getElementById('adaptButton').disabled = !hasHighlights;
+    }
+
+    function adaptText() {
+      const inputText = document.getElementById('inputText').value;
+      const words = inputText.match(/\b\w+\b|\s+|[.,!?;]/g) || [];
+      let outputText = '';
+      
+      words.forEach(word => {
+        const wordLower = word.toLowerCase().trim();
+        if (wordLower) {
+          let found = false;
+          for (const [stem, data] of Object.entries(wordList)) {
+            if (wordLower === stem || wordLower.startsWith(stem)) {
+              outputText += data.replacement;
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            outputText += word;
+          }
+        } else {
+          outputText += word;
+        }
+      });
+
+      document.getElementById('inputText').value = outputText;
+    }
+
+  </script>
+</body>
+</html>
