@@ -1,39 +1,173 @@
-body {
-  font-family: 'Courier New', Courier, monospace, sans-serif;
+@font-face {
+  font-family: 'Dottivetti';
+  src: url('fonts/DottivettiNB1VF.woff2') format('woff2'),
+       url('fonts/DottivettiNB1VF.woff') format('woff'),
+       url('fonts/DottivettiNB1VF.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
-header {
-  background-color: #333;
-  color: white;
-  padding: 1rem;
-  text-align: center;
+body {
+  font-family: 'Dottivetti', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #ffffff;
+  color: #333333;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-nav {
-  background-color: #444;
-  padding: 0.5rem;
-  text-align: center;
-}
-
-nav a {
-  color: rgb(179, 233, 177);
-  margin: 0 1rem;
-  text-decoration: none;
-}
-
-main {
-  padding: 2rem;
-}
-
-footer {
-  background-color: #333;
-  color: rgb(121, 196, 211);
-  text-align: center;
-  padding: 1rem;
-  position: fixed;
+.container {
   width: 100%;
-  bottom: 0;
+  max-width: 1200px;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.content-frame {
+  width: 100%;
+  max-width: 800px;
+  border: 2px dashed #000000;
+  border-radius: 12px;
+  padding: 4rem 3rem;
+  text-align: center;
+  background-color: #ffffff;
+  position: relative;
+}
+
+.main-text {
+  margin-bottom: 3rem;
+}
+
+.main-text p {
+  font-size: 1.25rem;
+  font-weight: normal;
+  color: #333333;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.newsletter-section {
+  margin-top: 2rem;
+}
+
+.newsletter-section p {
+  font-size: 0.9rem;
+  font-weight: normal;
+  color: #333333;
+  margin-bottom: 1rem;
+}
+
+.email-input {
+  position: relative;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.email-input input {
+  border: none;
+  background: transparent;
+  font-family: 'Dottivetti', sans-serif;
+  font-size: 0.9rem;
+  font-weight: normal;
+  color: #333333;
+  text-align: center;
+  outline: none;
+  width: 200px;
+  padding: 0.5rem;
+}
+
+.cursor-line {
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.9rem;
+  color: #000000;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .content-frame {
+    padding: 2rem 1.5rem;
+    border-radius: 8px;
+  }
+  
+  .main-text p {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  
+  .newsletter-section p {
+    font-size: 0.8rem;
+  }
+  
+  .email-input input {
+    width: 150px;
+    font-size: 0.8rem;
+  }
+  
+  .cursor-line {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0.5rem;
+  }
+  
+  .content-frame {
+    padding: 1.5rem 1rem;
+  }
+  
+  .main-text p {
+    font-size: 0.9rem;
+  }
+  
+  .newsletter-section p {
+    font-size: 0.75rem;
+  }
+  
+  .email-input input {
+    width: 120px;
+    font-size: 0.75rem;
+  }
+  
+  .cursor-line {
+    font-size: 0.75rem;
+  }
+}
+
+/* Focus states for accessibility */
+.email-input input:focus {
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 4px;
+}
+
+/* Hover effects */
+.content-frame:hover {
+  border-color: #666666;
+  transition: border-color 0.3s ease;
 }
 

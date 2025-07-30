@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PostBinaryTypeLab</title>
+  <style>
+    @font-face {
+      font-family: "DottivettiNB2";
+      src: url('fonts/DottivettiNB2.woff2') format('woff2'),
+           url('fonts/DottivettiNB2.woff') format('woff'),
+           url('fonts/DottivettiNB2.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    @font-face {
+      font-family: "ArDINdong2";
+      src: url('fonts/ArDINdong2.woff2') format('woff2'),
+           url('fonts/ArDINdong2.woff') format('woff'),
+           url('fonts/ArDINdong2.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    body {
+      font-family: "DottivettiNB2", sans-serif;
+      font-feature-settings: "ss02" 1;
+      -webkit-font-feature-settings: "ss02" 1;
+      -moz-font-feature-settings: "ss02" 1;
+      margin: 0;
+      padding: 20px;
+      background-color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .container {
+      max-width: 90vw;
+      width: 100%;
+      height: 80vh;
+      padding: 40px;
+      border: 2px dashed #000000;
+      border-radius: 20px;
+      background-color: #ffffff;
+      text-align: left;
+    }
+    
+    .main-text {
+      font-size: clamp(24px, 6vw, 48px);
+      line-height: 1.6;
+      font-weight: 100;
+      font-feature-settings: "ss02" 1;
+      -webkit-font-feature-settings: "ss02" 1;
+      -moz-font-feature-settings: "ss02" 1;
+      margin-bottom: 40px;
+      color: #000000;
+      text-align: center;
+    }
+    
+    .newsletter-section {
+      text-align: center;
+      margin-top: 60px;
+    }
+    
+    .newsletter-text {
+      font-size: clamp(13px, 3vw, 15px);
+      line-height: 1.4;
+      font-weight: 300;
+      font-family: "ArDINdong2", sans-serif;
+      margin-bottom: 20px;
+      color: #000000;
+    }
+    
+    .input-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2px;
+      margin-top: 2px;
+      width: 100%;
+    }
+    
+    .email-input {
+      border: 2px solid #cccccc;
+      border-radius: 8px;
+      background: #ffffff;
+      font-family: "ArDINdong2", sans-serif;
+      font-size: clamp(13px, 3vw, 15px);
+      line-height: 1.2;
+      padding: 10px 12px;
+      outline: none;
+      width: 300px;
+    
+      text-align: center;
+      color: #666666;
+      margin: 0 auto;
+      display: block;
+      box-sizing: border-box;
+      vertical-align: middle;
+      transform: translateY(1px);
+      transition: color 0.3s ease;
+      caret-color: #666666;
+    }
+    
+    .email-input:focus {
+      color: #4CAF50;
+    }
+    
+    .email-input:not(:placeholder-shown) {
+      color: #4CAF50;
+    }
+    
+    .email-input::placeholder {
+      color: #666666;
+    }
+    
+    .submit-button {
+      background: none;
+      border: none;
+      font-family: "ArDINdong2", sans-serif;
+      font-size: 14px;
+      font-feature-settings: "ss02" 1;
+      -webkit-font-feature-settings: "ss02" 1;
+      -moz-font-feature-settings: "ss02" 1;
+      color: #090909;
+      cursor: pointer;
+      padding: 8px 16px;
+      transition: color 0.3s ease;
+      margin-top: 5px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .submit-button:hover {
+      color: #4CAF50;
+    }
+    
+    /* Mobile adjustments */
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+      
+      .container {
+        padding: 30px 20px;
+        border-radius: 15px;
+      }
+      
+      .main-text {
+        font-size: clamp(16px, 5vw, 28px);
+        line-height: 1.5;
+      }
+      
+      .newsletter-text {
+        font-size: clamp(12px, 4vw, 18px);
+      }
+      
+      .email-input {
+        width: 150px;
+        font-size: clamp(12px, 4vw, 16px);
+      }
+      
+      .submit-button {
+        font-size: clamp(12px, 4vw, 16px);
+      }
+    }
+    
+    <script>
+      function sendEmail(event) {
+        event.preventDefault();
+        const emailInput = event.target.querySelector('.email-input');
+        const email = emailInput.value;
+        
+        if (email) {
+          const mailtoLink = `mailto:mail@andreadreiergrafik.ch?subject=Anmeldung Newsletter PostBinaryTypeLab&body=Anmeldung Newsletter PostBinaryTypeLab%0D%0A%0D%0AEmail: ${email}`;
+          window.open(mailtoLink);
+          emailInput.value = '';
+        }
+      }
+    </script>
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="main-text">
+      Für genderinklusive Sprache gibt es im Deutschen<br>
+      kaum typografische Lösungen. Mit<br>
+      PostBinaryTypeLab schaffen wir eine offene<br>
+      Plattform, die Gestalter*innen, Linguist*innen und<br>
+      Aktivist*innen zusammenbringt, um genau daran zu<br>
+      arbeiten.
+    </div>
+    
+    <div class="newsletter-section">
+      <div class="newsletter-text">
+        Sollen wir dich auf dem Laufenden halten?<br>
+        Abonniere den Newsletter!
+      </div>
+      <form class="input-container" onsubmit="sendEmail(event)">
+        <input type="email" class="email-input" placeholder="" required />
+        <button type="submit" class="submit-button">SENDEN</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
