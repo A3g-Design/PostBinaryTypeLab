@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tipe * before non-binary ending, it will automatically adapt.</title>
+  <style>
+    @font-face {
+      font-family: "DottivettiNB2";
+      src: url('fonts/DottivettiNB2.woff2') format('woff2'),
+           url('fonts/DottivettiNB2.woff') format('woff'),
+           url('fonts/DottivettiNB2.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    body {
+      font-family:  "DottivettiNB2";
+      margin: 0;
+      padding: 20px;
+      background-color: #ffffff;
+      min-height: 100vh;
+    }
+    
+    h1 {
+      text-align: left;
+      margin: 0;
+      font-size: clamp(12px, 3vw, 18px);
+      line-height: 1.2;
+      font-weight: normal;
+    }
+    
+    .title-section {
+      margin: 5px 0 2px 0;
+      padding: 0;
+    }
+    
+    .container {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      width: 100%;
+      min-height: 400px;
+    }
+    
+    .column {
+      width: 100%;
+      height: 100%;
+      padding: clamp(5px, 2vw, 10px) clamp(20px, 4vw, 40px);
+      border-top: 6px solid #223d35;
+      background-color: #ffffff;
+      position: relative;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 20px;
+    }
+    
+    .text-container {
+      width: 100%;
+      max-width: 55vw;
+      aspect-ratio: 57/33;
+      margin-top: 8px;
+      border: 2px dashed #223d35;
+      border-radius: 20px;
+      padding: 15px;
+      background-color: #ffffff;
+    }
+
+    .instruction-container {
+      width: 100%;
+      max-width: 25vw;
+      aspect-ratio: 5/4;
+      margin-top: 8px;
+      border: none;
+      padding: 15px;
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .instruction-text {
+      font-family: "DottivettiNB2", sans-serif;
+      font-size: clamp(14px, 2vw, 20px);
+      color: #223d35;
+      text-align: left;
+      font-feature-settings: "ss01" 1;
+      -webkit-font-feature-settings: "ss01" 1;
+      -moz-font-feature-settings: "ss01" 1;
+    }
+    
+    .button-container {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 1000;
+    }
+    
+    .header-container {
+      position: static;
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .feature-selector {
+      display: flex;
+      gap: clamp(5px, 2vw, 10px);
+      flex-wrap: wrap;
+    }
+    
+    .feature-selector button {
+      padding: clamp(8px, 2vw, 12px) clamp(16px, 4vw, 24px);
+      font-size: clamp(14px, 3.5vw, 19.2px);
+      background-color: #ffffff;
+      color: #223d35;
+      border: 2px solid #223d35;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: "DottivettiNB2", sans-serif;
+      white-space: nowrap;
+    }
+    
+    .feature-selector button:hover {
+      background-color: #223d35;
+      color: #ffffff;
+    }
+    
+    .feature-selector button.active {
+      background-color: #223d35;
+      color: #ffffff;
+    }
+    
+    .feature-button {
+      padding: clamp(8px, 2vw, 12px) clamp(16px, 4vw, 24px);
+      font-size: clamp(14px, 3.5vw, 19.2px);
+      background-color: #ff6b6b;
+      color: #ffffff;
+      border: 2px solid #ff6b6b;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: "DottivettiNB2", sans-serif;
+    }
+    
+    .feature-button:hover {
+      background-color: #ffffff;
+      color: #ff6b6b;
+    }
+
+    .feature-selector-style {
+      padding: clamp(8px, 2vw, 12px) clamp(16px, 4vw, 24px);
+      font-size: clamp(14px, 3.5vw, 19.2px);
+      background-color: #ffffff;
+      color: #ff6b6b;
+      border: 2px solid #ff6b6b;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: "DottivettiNB2", sans-serif;
+      white-space: nowrap;
+    }
+
+    .feature-selector-style:hover {
+      background-color: #ff6b6b;
+      color: #ffffff;
+    }
+
+    #inputText {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: "DottivettiNB2", sans-serif;
+      font-size: clamp(18px, 8vw, 80pt);
+      line-height: 1.3;
+      border: none;
+      background-color: transparent;
+      outline: none;
+      white-space: pre-wrap;
+      position: relative;
+      overflow: hidden;
+      caret-color: red;
+      animation: blink-caret 1s step-end infinite;
+      font-feature-settings: "ss01" 1;
+      -webkit-font-feature-settings: "ss01" 1;
+      -moz-font-feature-settings: "ss01" 1;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      text-align: center;
+    }
+
+    @keyframes blink-caret {
+      from, to { caret-color: red; }
+      50% { caret-color: transparent; }
+    }
+
+    #inputDisplay {
+      width: 100%;
+      min-height: 300px;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-family: "DottivettiNB2";
+      white-space: pre-wrap;
+      overflow-y: auto;
+      font-size: clamp(12px, 3vw, 16px);
+      line-height: 1.4;
+      background-color: #ffffff;
+    }
+    
+    .highlight {
+      background-color: yellow !important;
+      padding: 2px 0;
+    }
+
+    /* ===== Overlay (Hinweis fuer Systemdialog) ===== */
+    #printOverlay {
+      position: fixed;
+      inset: 0;
+      display: none; /* wird per JS auf flex gesetzt */
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.45);
+      z-index: 9999;
+      font-family: DottivettiNB2, system-ui, sans-serif;
+      color: #fff;
+      text-align: center;
+      padding: 24px;
+    }
+    #printOverlay .overlay-box {
+      background: #223d35;
+      padding: 20px 24px;
+      border-radius: 12px;
+      max-width: 520px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    #printOverlay .overlay-title {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    #printOverlay .overlay-text {
+      opacity: .9;
+      font-size: 14px;
+    }
+    
+    /* Print styles - Mit proportionaler Schriftgröße */
+    @media print {
+      @page {
+        size: 57mm 33mm;
+        margin: 0;
+        page-break-after: avoid;
+        page-break-before: avoid;
+        page-break-inside: avoid;
+      }
+      
+      html {
+        width: 57mm !important;
+        height: 33mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        orientation: landscape !important;
+      }
+      
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+        width: 57mm !important;
+        height: 33mm !important;
+        overflow: hidden !important;
+        page-break-after: avoid !important;
+        page-break-before: avoid !important;
+        page-break-inside: avoid !important;
+        transform: scale(1) !important;
+        transform-origin: top left !important;
+        orientation: landscape !important;
+      }
+
+      /* Overlay nie mitdrucken */
+      #printOverlay { display: none !important; }
+      
+      .header-container,
+      .button-container,
+      .instruction-container {
+        display: none !important;
+        visibility: hidden !important;
+        position: absolute !important;
+        left: -9999px !important;
+      }
+      
+      .container {
+        margin: 0 !important;
+        width: 57mm !important;
+        height: 33mm !important;
+        position: static !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        overflow: hidden !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+      }
+      
+      .column {
+        width: 100% !important;
+        height: 100% !important;
+        padding: 0 !important;
+        border: none !important;
+        background: white !important;
+        margin: 0 !important;
+        display: block !important;
+        page-break-inside: avoid !important;
+      }
+      
+      .text-container {
+        width: 57mm !important; 
+        height: 33mm !important; 
+        margin: 0 !important;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+        position: static !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+        page-break-before: avoid !important;
+        aspect-ratio: 57/33 !important;
+        min-width: 57mm !important;
+        max-width: 57mm !important;
+        min-height: 33mm !important;
+        max-height: 33mm !important;
+      }
+     
+     #inputText {
+       width: 100% !important;
+       height: 100% !important;
+       padding: 0 !important;
+       margin: 0 !important;
+       /* Proportionale Schriftgröße basierend auf Container-Höhe */
+       font-size: calc(33mm * 0.35) !important; /* ~11.5mm Schriftgröße, anpassbar */
+       line-height: 1.2 !important;
+       border: none !important;
+       background: transparent !important;
+       color: black !important;
+       overflow: hidden !important;
+       white-space: normal !important;
+       word-wrap: break-word !important;
+       overflow-wrap: break-word !important;
+       font-feature-settings: "ss01" 1 !important;
+       -webkit-font-feature-settings: "ss01" 1 !important;
+       -moz-font-feature-settings: "ss01" 1 !important;
+       position: static !important;
+       display: block !important;
+       text-align: center !important;
+       max-width: 100% !important;
+       max-height: 100% !important;
+       box-sizing: border-box !important;
+       page-break-inside: avoid !important;
+       orphans: 99 !important;
+       widows: 99 !important;
+       /* Alternative: Verwendung von vw/vh relativ zur Print-Page */
+       /* font-size: 15vw !important; */
+     }
+     
+     #inputDisplay {
+       display: none !important;
+       visibility: hidden !important;
+     }
+     
+     /* FORCE single page */
+     * {
+       -webkit-print-color-adjust: exact !important;
+       color-adjust: exact !important;
+       page-break-after: avoid !important;
+       page-break-before: avoid !important;
+       page-break-inside: avoid !important;
+     }
+     
+     /* Hide everything else completely */
+     body > *:not(.container) {
+       display: none !important;
+       visibility: hidden !important;
+       position: absolute !important;
+       left: -9999px !important;
+     }
+   }
+    
+    /* Mobile-specific adjustments */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .container {
+        margin-top: 140px;
+        height: calc(100vh - 180px);
+      }
+      
+      .header-container {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+      }
+      
+      .button-container {
+        bottom: 10px;
+        left: 10px;
+      }
+      
+      .column {
+        padding: 15px;
+      }
+      
+      #inputText {
+        font-size: clamp(48px, 12vw, 60pt);
+        padding: 0 10px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .feature-selector {
+        justify-content: center;
+      }
+      
+      .feature-selector button {
+        flex: 1;
+        min-width: 80px;
+      }
+      
+      h1 {
+        text-align: center;
+        font-size: clamp(10px, 4vw, 16px);
+        font-weight: normal;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header-container">
+    <div class="feature-selector">
+      <button onclick="setFeature('ss01')" class="active">Standard</button>
+      <button onclick="setFeature('ss03')">Plus</button>
+      <button onclick="setFeature('ss02')">Flow</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="column">
+      <div class="text-container">
+        <div id="inputText" contenteditable="true"></div>
+        <div id="inputDisplay" style="display: none;"></div>
+      </div>
+      <div class="instruction-container">
+        <div class="instruction-text">Ein * vor der weiblichen Endung macht deinen Text im Deutschen non-binär!
+          Schreibe Deinen Text und lasse Dir verschiedene Glyphen-Optionen anzeigen.
+          
+          Wähle deinen Favoriten und drucke Deinen individuellen Sticker.
+          
+          Willst du mehr über inklusive Zeichen erfahren?
+          www.postbinarytapelab.com</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="button-container">
+    <button class="feature-selector-style" onclick="resetPage()">Reset</button>
+    <!-- Print zeigt nur das Overlay (kein Browser-Printfenster) -->
+    <button class="feature-selector-style" onclick="showPrintOverlay()">Print</button>
+  </div>
+
+  <!-- Overlay fuer den Systemdialog-Hinweis -->
+  <div id="printOverlay" aria-modal="true" role="dialog">
+    <div class="overlay-box">
+      <div class="overlay-title">Jetzt ⌥ + ⌘ + P druecken</div>
+      <div class="overlay-text">
+        Damit oeffnest du den macOS-Systemdialog zum Drucken.
+        <br/>Schliessen: ESC oder Klick neben das Feld.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function setFeature(feature) {
+      const inputText = document.getElementById('inputText');
+      const buttons = document.querySelectorAll('.feature-selector button');
+      // aktive Klasse aktualisieren
+      buttons.forEach(button => button.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Font-Feature setzen
+      switch(feature) {
+        case 'ss01':
+          inputText.style.fontFeatureSettings = '"ss01" 1';
+          inputText.style.webkitFontFeatureSettings = '"ss01" 1';
+          inputText.style.mozFontFeatureSettings = '"ss01" 1';
+          break;
+        case 'ss02':
+          inputText.style.fontFeatureSettings = '"ss02" 1';
+          inputText.style.webkitFontFeatureSettings = '"ss02" 1';
+          inputText.style.mozFontFeatureSettings = '"ss02" 1';
+          break;
+        case 'ss03':
+          inputText.style.fontFeatureSettings = '"ss03" 1';
+          inputText.style.webkitFontFeatureSettings = '"ss03" 1';
+          inputText.style.mozFontFeatureSettings = '"ss03" 1';
+          break;
+      }
+    }
+    
+    function resetPage() {
+      document.getElementById('inputText').innerHTML = '';
+      window.location.reload(true);
+    }
+    
+    // Nur Overlay zeigen (kein window.print)
+    async function showPrintOverlay() {
+      try {
+        await document.fonts.ready;                 // Fonts fuer stabile Metriken laden
+        await document.fonts.load('1em "DottivettiNB2"');
+      } catch (e) {
+        console.warn('Fonts konnten nicht bestaetigt werden, fahre fort.', e);
+      }
+
+      const ov = document.getElementById('printOverlay');
+      ov.style.display = 'flex';
+
+      // Schliessen per ESC
+      const onKey = (ev) => { if (ev.key === 'Escape') hideOverlay(); };
+      window.addEventListener('keydown', onKey);
+
+      // Schliessen per Klick auf Hintergrund
+      const onClick = (ev) => { if (ev.target === ov) hideOverlay(); };
+      ov.addEventListener('click', onClick);
+
+      function hideOverlay() {
+        ov.style.display = 'none';
+        window.removeEventListener('keydown', onKey);
+        ov.removeEventListener('click', onClick);
+      }
+    }
+    
+    // Auto-focus the input area when page loads
+    window.addEventListener('load', function() {
+      document.getElementById('inputText').focus();
+    });
+  </script>
+</body>
+</html>
