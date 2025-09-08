@@ -477,6 +477,16 @@
         font-weight: normal;
       }
     }
+    
+    /* Link styling */
+    a {
+      color: black;
+      text-decoration: underline;
+    }
+    
+    a:hover {
+      color: red;
+    }
   </style>
 </head>
 <body>
@@ -495,15 +505,15 @@
         <div id="inputDisplay" style="display: none;"></div>
       </div>
       <div class="instruction-container">
-        <div class="instruction-text">Ein * vor der weiblichen Endung macht deinen Text im Deutschen non-binär!
+        <div class="instruction-text">Option-1 non-binäre deutsche Glyphen: <br> Schreibe * vor der weiblichen Endung. 
           <br/><br/>
-          Schreibe Deinen Text und lasse Dir verschiedene Glyphen-Optionen anzeigen.
+          Option-2 zusätzlich Verbindungsbögen:<br>tippe ! plus 1 oder ! plus 2
           <br/><br/>
-          Wähle deinen Favoriten und drucke Deinen individuellen Sticker.
+          Wähle Dein Glyphen-Typ.
           <br/><br/>
-          Willst du mehr über inklusive Zeichen erfahren?
-          <br/>
-          www.postbinarytapelab.ch</div>
+          Wähle Print und folge den Anweisungen.
+          <br/><br/>
+          Willst du mehr über inklusive Zeichen erfahren? <a href="https://a3g.ch/doku-postbinary" target="_blank">Dokumentation</a></div>
       </div>
     </div>
   </div>
@@ -566,6 +576,36 @@
       });
     }
 
+    function setCursorPosition(element, position) {
+      try {
+        const range = document.createRange();
+        const sel = window.getSelection();
+        
+        if (element.childNodes.length === 0) {
+          // Wenn keine Textknoten vorhanden, einen erstellen
+          element.appendChild(document.createTextNode(''));
+        }
+        
+        const textNode = element.childNodes[0];
+        const maxPosition = textNode.textContent ? textNode.textContent.length : 0;
+        const safePosition = Math.min(Math.max(0, position), maxPosition);
+        
+        range.setStart(textNode, safePosition);
+        range.setEnd(textNode, safePosition);
+        
+        sel.removeAllRanges();
+        sel.addRange(range);
+      } catch (error) {
+        // Fallback: Cursor ans Ende setzen
+        const range = document.createRange();
+        const sel = window.getSelection();
+        range.selectNodeContents(element);
+        range.collapse(false);
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+    }
+
     function processLigatures(text) {
       // Hier würde die Logik für die Ligatur-Erkennung stehen
       // Falls Sie spezielle Trigger-Kombinationen haben
@@ -589,13 +629,19 @@
         return true;
       }
       
-      // Bei 3 Zeilen: nur Backspace, Delete, Arrow-Keys erlauben
+      // Bei 3 Zeilen: nur bestimmte Tasten erlauben
       const allowedKeys = [
         'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 
-        'ArrowUp', 'ArrowDown', 'Home', 'End'
+        'ArrowUp', 'ArrowDown', 'Home', 'End', 'Tab'
       ];
       
-      if (!allowedKeys.includes(event.code) && !event.ctrlKey && !event.metaKey) {
+      // Ctrl/Cmd + A (Select All), Ctrl/Cmd + C (Copy), Ctrl/Cmd + X (Cut) erlauben
+      if ((event.ctrlKey || event.metaKey) && ['KeyA', 'KeyC', 'KeyX', 'KeyV'].includes(event.code)) {
+        return true;
+      }
+      
+      // Wenn bereits 3 Zeilen und keine erlaubte Taste, blockieren
+      if (!allowedKeys.includes(event.code) && lines.length >= 3) {
         event.preventDefault();
         event.stopPropagation();
         return false;
@@ -604,27 +650,41 @@
 
     function handleInput(event) {
       const inputText = event.target;
-      const text = inputText.textContent || '';
+      let text = inputText.textContent || '';
       
       // Sofortige Zeilenbegrenzung auf maximal 3 Zeilen
       const lines = text.split('\n');
       if (lines.length > 3) {
         // Wenn mehr als 3 Zeilen, sofort kürzen
         const limitedText = lines.slice(0, 3).join('\n');
+        
+        // Cursor-Position vor der Änderung merken
+        const selection = window.getSelection();
+        const cursorPosition = selection.rangeCount > 0 ? selection.getRangeAt(0).startOffset : 0;
+        
         inputText.textContent = limitedText;
         
-        // Cursor an das Ende der letzten erlaubten Zeile setzen
-        const range = document.createRange();
-        const sel = window.getSelection();
-        range.selectNodeContents(inputText);
-        range.collapse(false);
-        sel.removeAllRanges();
-        sel.addRange(range);
+        // Cursor richtig positionieren
+        setCursorPosition(inputText, Math.min(cursorPosition, limitedText.length));
         
         // Event stoppen
         event.preventDefault();
         event.stopPropagation();
         return false;
+      }
+      
+      // Zusätzliche Überprüfung: Wenn eine Zeile zu lang wird, umbrechen verhindern
+      const maxCharsPerLine = 25; // Anpassbar je nach Font-Größe
+      const modifiedLines = lines.map(line => {
+        if (line.length > maxCharsPerLine) {
+          return line.substring(0, maxCharsPerLine);
+        }
+        return line;
+      });
+      
+      if (modifiedLines.join('\n') !== text) {
+        inputText.textContent = modifiedLines.join('\n');
+        setCursorPosition(inputText, inputText.textContent.length);
       }
       
       // Bei Leerzeichen oder anderen Triggern das Rendering forcieren
@@ -716,17 +776,43 @@
       
       // Paste-Events abfangen und Zeilenbegrenzung anwenden
       inputText.addEventListener('paste', function(event) {
-        setTimeout(() => {
-          const text = inputText.textContent || '';
-          const lines = text.split('\n');
-          if (lines.length > 3) {
-            const limitedText = lines.slice(0, 3).join('\n');
-            inputText.textContent = limitedText;
-          }
-          
-          applyFeature(inputText, currentFeature);
-          forceRerender(inputText);
-        }, 50);
+        event.preventDefault();
+        
+        // Eingefügten Text aus der Zwischenablage holen
+        const paste = (event.clipboardData || window.clipboardData).getData('text');
+        
+        // Aktuellen Text und Cursor-Position holen
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        const currentText = inputText.textContent || '';
+        const cursorPos = range.startOffset;
+        
+        // Text an Cursor-Position einfügen
+        const beforeCursor = currentText.substring(0, cursorPos);
+        const afterCursor = currentText.substring(cursorPos);
+        let newText = beforeCursor + paste + afterCursor;
+        
+        // Auf maximal 3 Zeilen begrenzen
+        const lines = newText.split('\n');
+        if (lines.length > 3) {
+          newText = lines.slice(0, 3).join('\n');
+        }
+        
+        // Jede Zeile auf maximale Länge prüfen
+        const maxCharsPerLine = 25;
+        const limitedLines = newText.split('\n').map(line => {
+          return line.length > maxCharsPerLine ? line.substring(0, maxCharsPerLine) : line;
+        });
+        
+        inputText.textContent = limitedLines.join('\n');
+        
+        // Cursor nach dem eingefügten Text positionieren
+        const newCursorPos = Math.min(beforeCursor.length + paste.length, inputText.textContent.length);
+        setCursorPosition(inputText, newCursorPos);
+        
+        // Feature anwenden und Rendering forcieren
+        applyFeature(inputText, currentFeature);
+        setTimeout(() => forceRerender(inputText), 10);
       });
       
       // Composition Events für internationale Tastaturen
@@ -750,11 +836,23 @@
           mutations.forEach(function(mutation) {
             if (mutation.type === 'childList' || mutation.type === 'characterData') {
               // Zeilenbegrenzung auch hier prüfen
-              const text = inputText.textContent || '';
+              let text = inputText.textContent || '';
               const lines = text.split('\n');
+              
+              // Auf maximal 3 Zeilen begrenzen
               if (lines.length > 3) {
-                const limitedText = lines.slice(0, 3).join('\n');
-                inputText.textContent = limitedText;
+                text = lines.slice(0, 3).join('\n');
+                inputText.textContent = text;
+              }
+              
+              // Zusätzlich jede Zeile auf maximale Länge prüfen
+              const maxCharsPerLine = 25;
+              const modifiedLines = text.split('\n').map(line => {
+                return line.length > maxCharsPerLine ? line.substring(0, maxCharsPerLine) : line;
+              });
+              
+              if (modifiedLines.join('\n') !== text) {
+                inputText.textContent = modifiedLines.join('\n');
               }
               
               // Kleiner Delay um das Re-Rendering zu forcieren

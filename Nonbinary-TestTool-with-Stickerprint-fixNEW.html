@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tipe * before non-binary ending, it will automatically adapt.</title>
+  <style>
+    @font-face {
+      font-family: "DottivettiNB2";
+      src: url('fonts/DottivettiNB2.woff2') format('woff2'),
+           url('fonts/DottivettiNB2.woff') format('woff'),
+           url('fonts/DottivettiNB2.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    body {
+      font-family: "DottivettiNB2", system-ui, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #ffffff;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      width: 100%;
+      min-height: 400px;
+    }
+
+    .column {
+      width: 100%;
+      height: 100%;
+      padding: clamp(5px, 2vw, 10px) clamp(20px, 4vw, 40px);
+      border-top: 6px solid #223d35;
+      background-color: #ffffff;
+      position: relative;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    /* Screen preview */
+    .page {
+      width: min(57vw, 600px);
+      aspect-ratio: 57 / 36;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border: 2px dashed #223d35;
+      border-radius: 16px;
+    }
+
+    .text-container {
+      width: 100%;
+      height: 58%;
+      max-width: 55vw;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+    }
+
+    .instruction-container {
+      width: 100%;
+      max-width: 25vw;
+      margin-top: 8px;
+      border: none;
+      padding: 15px;
+      background-color: #ffffff;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 23px;
+    }
+
+    .instruction-text {
+      font-family: "DottivettiNB2", sans-serif;
+      font-size: clamp(14px, 2vw, 20px);
+      color: #223d35;
+      text-align: left;
+      font-feature-settings: "ss01" 1;
+      -webkit-font-feature-settings: "ss01" 1;
+      -moz-font-feature-settings: "ss01" 1;
+    }
+
+    .button-container {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 1000;
+    }
+
+    .header-container {
+      position: static;
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .feature-selector {
+      display: flex;
+      gap: clamp(5px, 2vw, 10px);
+      flex-wrap: wrap;
+    }
+
+    .feature-selector button,
+    .feature-selector-style {
+      padding: clamp(8px, 2vw, 12px) clamp(16px, 4vw, 24px);
+      font-size: clamp(14px, 3.5vw, 19.2px);
+      font-family: "DottivettiNB2", sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      border: 2px solid #223d35;
+      background: #fff;
+      color: #223d35;
+    }
+
+    .feature-selector button:hover,
+    .feature-selector-style:hover {
+      background-color: #223d35;
+      color: #ffffff;
+    }
+
+    .feature-selector button.active {
+      background-color: #223d35;
+      color: #ffffff;
+    }
+
+    #inputText {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: "DottivettiNB2", sans-serif;
+      font-size: clamp(18px, 8vw, 80pt);
+      line-height: 1.3;
+      border: none;
+      background-color: transparent;
+      outline: none;
+      white-space: pre-wrap;
+      position: relative;
+      overflow: hidden;
+      caret-color: red;
+      animation: blink-caret 1s step-end infinite;
+      font-feature-settings: "ss01" 1;
+      -webkit-font-feature-settings: "ss01" 1;
+      -moz-font-feature-settings: "ss01" 1;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      text-align: center;
+    }
+
+    @keyframes blink-caret { from, to { caret-color: red; } 50% { caret-color: transparent; } }
+
+    #printOverlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.45);
+      z-index: 9999;
+      color: #fff;
+      text-align: center;
+      padding: 24px;
+      font-family: DottivettiNB2, system-ui, sans-serif;
+    }
+    #printOverlay .overlay-box {
+      background: #223d35;
+      padding: 20px 24px;
+      border-radius: 12px;
+      max-width: 520px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    #printOverlay .overlay-title { font-size: 18px; margin-bottom: 8px; }
+    #printOverlay .overlay-text { opacity: .9; font-size: 14px; }
+
+    /* =================== PRINT =================== */
+    /* Enforce 57×36 mm page pitch, content area = 33 mm */
+    @media print {
+      @page {
+        size: 57mm 36mm;
+        margin: 0 !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+      }
+
+      /* hide UI in print */
+      #printOverlay,
+      .header-container,
+      .button-container,
+      .instruction-container {
+        display: none !important;
+        visibility: hidden !important;
+      }
+
+      html, body {
+        width: 57mm !important;
+        height: 36mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+        background: #fff !important;
+      }
+
+      .container, .column {
+        width: 57mm !important;
+        height: 36mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        background: #fff !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+      }
+
+      /* HARD page wrapper = 57×36 mm; each label = one page */
+      .page {
+        width: 57mm !important;
+        height: 36mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: #fff !important;
+        page-break-after: always !important;
+        box-sizing: border-box !important;
+      }
+
+      /* CONTENT BOX = 33 mm actual sticker height */
+      .text-container {
+        width: 57mm !important;
+        height: 33mm !important;
+        margin: 0 !important;
+        padding: 0 !important;        /* or padding-top/bottom: 1.5mm to nudge */
+        border: none !important;
+        border-radius: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+        background: #fff !important;
+        box-sizing: border-box !important;
+      }
+
+      #inputText {
+        width: 57mm !important;
+        height: 33mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+        color: black !important;
+        border: none !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        text-align: center !important;
+        font-feature-settings: "ss01" 1 !important;
+        -webkit-font-feature-settings: "ss01" 1 !important;
+        -moz-font-feature-settings: "ss01" 1 !important;
+        font-size: calc(33mm * 0.23) !important; /* adjust factor as you like */
+        line-height: 1.2 !important;
+        box-sizing: border-box !important;
+        page-break-inside: avoid !important;
+      }
+
+      /* be strict about page breaks */
+      *, .page, .text-container, #inputText {
+        page-break-before: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      /* hide anything else entirely */
+      body > *:not(.container) {
+        display: none !important;
+        visibility: hidden !important;
+      }
+    }
+
+    /* Mobile tweaks */
+    @media (max-width: 768px) {
+      body { padding: 10px; }
+      .container { margin-top: 140px; height: calc(100vh - 180px); }
+      .button-container { bottom: 10px; left: 10px; }
+      .column { padding: 15px; }
+      #inputText { font-size: clamp(48px, 12vw, 60pt); padding: 0 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header-container">
+    <div class="feature-selector">
+      <button onclick="setFeature('ss01')" class="active">Standard</button>
+      <button onclick="setFeature('ss03')">Plus</button>
+      <button onclick="setFeature('ss02')">Flow</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="column">
+      <div class="page">
+        <div class="text-container">
+          <div id="inputText" contenteditable="true"></div>
+          <div id="inputDisplay" style="display: none;"></div>
+        </div>
+      </div>
+      <div class="instruction-container">
+        <div class="instruction-text">
+          Ein * vor der weiblichen Endung macht deinen Text im Deutschen non-binaer!
+          <br/><br/>
+          Schreibe deinen Text und lasse dir verschiedene Glyphen-Optionen anzeigen.
+          <br/><br/>
+          Waehle deinen Favoriten und drucke deinen individuellen Sticker.
+          <br/><br/>
+          Willst du mehr ueber inklusive Zeichen erfahren?
+          <br/>
+          www./a3g.ch/doku-postbinary
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="button-container">
+    <button class="feature-selector-style" onclick="resetPage()">Reset</button>
+    <button class="feature-selector-style" onclick="showPrintOverlay()">Print</button>
+  </div>
+
+  <!-- Overlay fuer den Systemdialog-Hinweis -->
+  <div id="printOverlay" aria-modal="true" role="dialog">
+    <div class="overlay-box">
+      <div class="overlay-title">Press: ⌥ + ⌘ + P</div>
+      <div class="overlay-text">Confirm "Drucken" in macOS Systemdialog. Nothing else needed.</div>
+    </div>
+  </div>
+
+  <script>
+    let currentFeature = 'ss01';
+
+    function setFeature(feature) {
+      currentFeature = feature;
+      const inputText = document.getElementById('inputText');
+      const buttons = document.querySelectorAll('.feature-selector button');
+      buttons.forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      applyFeature(inputText, feature);
+      forceRerender(inputText);
+    }
+
+    function applyFeature(el, feature) {
+      const v = `"${feature}" 1`;
+      el.style.fontFeatureSettings = v;
+      el.style.webkitFontFeatureSettings = v;
+      el.style.mozFontFeatureSettings = v;
+    }
+
+    function forceRerender(el) {
+      const d = el.style.display;
+      el.style.display = 'none';
+      el.offsetHeight;
+      el.style.display = d;
+      const o = el.style.opacity;
+      el.style.opacity = '0.999';
+      requestAnimationFrame(() => { el.style.opacity = o; });
+    }
+
+    function handleKeyDown(event) {
+      const inputText = event.target;
+      const lines = (inputText.textContent || '').split('\n');
+      if (event.code === 'Enter' && lines.length >= 3) {
+        event.preventDefault(); event.stopPropagation(); return false;
+      }
+      if (lines.length < 3) return true;
+      const ok = ['Backspace','Delete','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'];
+      if (!ok.includes(event.code) && !event.ctrlKey && !event.metaKey) {
+        event.preventDefault(); event.stopPropagation(); return false;
+      }
+    }
+
+    function handleInput(event) {
+      const inputText = event.target;
+      const lines = (inputText.textContent || '').split('\n');
+      if (lines.length > 3) {
+        inputText.textContent = lines.slice(0,3).join('\n');
+        const r = document.createRange(), s = window.getSelection();
+        r.selectNodeContents(inputText); r.collapse(false);
+        s.removeAllRanges(); s.addRange(r);
+        event.preventDefault(); event.stopPropagation(); return false;
+      }
+      if (event.data === ' ' || event.inputType === 'insertText') {
+        applyFeature(inputText, currentFeature);
+        setTimeout(() => forceRerender(inputText), 0);
+      }
+    }
+
+    function handleKeyUp(event) {
+      const inputText = event.target;
+      const lines = (inputText.textContent || '').split('\n');
+      if (lines.length > 3) {
+        inputText.textContent = lines.slice(0,3).join('\n');
+        const r = document.createRange(), s = window.getSelection();
+        r.selectNodeContents(inputText); r.collapse(false);
+        s.removeAllRanges(); s.addRange(r);
+      }
+      if (event.code === 'Space' || event.code === 'Backspace') {
+        applyFeature(inputText, currentFeature);
+        setTimeout(() => forceRerender(inputText), 10);
+      }
+    }
+
+    function resetPage() {
+      document.getElementById('inputText').innerHTML = '';
+      window.location.reload(true);
+    }
+
+    async function showPrintOverlay() {
+      try {
+        await document.fonts.ready;
+        await document.fonts.load('1em "DottivettiNB2"');
+      } catch (e) { /* ignore */ }
+      const ov = document.getElementById('printOverlay');
+      ov.style.display = 'flex';
+      const onKey = (ev) => { if (ev.key === 'Escape') hide(); };
+      window.addEventListener('keydown', onKey);
+      const onClick = (ev) => { if (ev.target === ov) hide(); };
+      ov.addEventListener('click', onClick);
+      function hide() {
+        ov.style.display = 'none';
+        window.removeEventListener('keydown', onKey);
+        ov.removeEventListener('click', onClick);
+      }
+    }
+
+    window.addEventListener('load', function() {
+      const el = document.getElementById('inputText');
+      el.focus();
+      el.addEventListener('input', handleInput);
+      el.addEventListener('keyup', handleKeyUp);
+      el.addEventListener('keydown', handleKeyDown);
+      el.addEventListener('paste', function() {
+        setTimeout(() => {
+          const lines = (el.textContent || '').split('\n');
+          if (lines.length > 3) el.textContent = lines.slice(0,3).join('\n');
+          applyFeature(el, currentFeature); forceRerender(el);
+        }, 50);
+      });
+      el.addEventListener('compositionend', function() {
+        setTimeout(() => { applyFeature(el, currentFeature); forceRerender(el); }, 10);
+      });
+      applyFeature(el, currentFeature);
+    });
+
+    if (window.MutationObserver) {
+      const observer = new MutationObserver(function(muts) {
+        const el = document.getElementById('inputText');
+        if (!el) return;
+        muts.forEach(function(m) {
+          if (m.type === 'childList' || m.type === 'characterData') {
+            const lines = (el.textContent || '').split('\n');
+            if (lines.length > 3) el.textContent = lines.slice(0,3).join('\n');
+            setTimeout(() => { applyFeature(el, currentFeature); forceRerender(el); }, 5);
+          }
+        });
+      });
+      window.addEventListener('load', function() {
+        const el = document.getElementById('inputText');
+        if (el) observer.observe(el, { childList: true, subtree: true, characterData: true });
+      });
+    }
+  </script>
+</body>
+</html>
