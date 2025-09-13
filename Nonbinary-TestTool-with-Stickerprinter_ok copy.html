@@ -388,9 +388,9 @@
        white-space: normal !important;
        word-wrap: break-word !important;
        overflow-wrap: break-word !important;
-      font-feature-settings: var(--print-feature-settings, "ss01" 1) !important;
-      -webkit-font-feature-settings: var(--print-feature-settings, "ss01" 1) !important;
-      -moz-font-feature-settings: var(--print-feature-settings, "ss01" 1) !important;
+       font-feature-settings: "ss01" 1 !important;
+       -webkit-font-feature-settings: "ss01" 1 !important;
+       -moz-font-feature-settings: "ss01" 1 !important;
        position: static !important;
        display: block !important;
        text-align: center !important;
@@ -554,9 +554,6 @@
       // Font-Feature setzen
       applyFeature(inputText, feature);
       
-      // CSS Custom Property für Print-Styles setzen
-      updatePrintFeature(feature);
-      
       // Force re-rendering für Chrome
       forceRerender(inputText);
     }
@@ -566,12 +563,6 @@
       element.style.fontFeatureSettings = featureValue;
       element.style.webkitFontFeatureSettings = featureValue;
       element.style.mozFontFeatureSettings = featureValue;
-    }
-
-    function updatePrintFeature(feature) {
-      // CSS Custom Property für Print-Styles setzen
-      const featureValue = `"${feature}" 1`;
-      document.documentElement.style.setProperty('--print-feature-settings', featureValue);
     }
 
     function forceRerender(element) {
@@ -707,9 +698,6 @@
         console.warn('Fonts konnten nicht bestätigt werden, fahre fort.', e);
       }
 
-      // Aktuelles Feature für Print-Styles sicherstellen
-      updatePrintFeature(currentFeature);
-
       const ov = document.getElementById('printOverlay');
       ov.style.display = 'flex';
 
@@ -765,9 +753,6 @@
       
       // Initial feature anwenden
       applyFeature(inputText, currentFeature);
-      
-      // Initial print feature setzen
-      updatePrintFeature(currentFeature);
     });
 
     // Zusätzlicher Observer für Chrome-spezifische Probleme
