@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What is your suggestion for a non-binary form?</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    @font-face {
+      font-family: "CoFoSansMono";
+      src: url('fonts/CoFoSansMono-Regular.woff2') format('woff2'),
+           url('fonts/CoFoSansMono-Regular.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Salmanazar";
+      src: url('fonts/205TF-Salmanazar-Regular.woff2') format('woff2'),
+           url('fonts/205TF-Salmanazar-Regular.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    body {
+      font-family: "CoFoSansMono", monospace;
+      margin: 0;
+      padding: 20px;
+      background-color: #ffffff;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    h1 {
+      text-align: left;
+      margin-bottom: 10px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .top-bar {
+      border-top: 2px solid #0066ff;
+      padding-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .word-selection {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .word-selection label {
+      font-size: 14px;
+    }
+
+    .word-btn {
+      font-family: "CoFoSansMono", monospace;
+      padding: 8px 16px;
+      font-size: 16px;
+      background-color: #ffffff;
+      border: 2px solid #000000;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .word-btn:hover {
+      background-color: #f0f0f0;
+    }
+
+    .word-btn.active {
+      background-color: #000000;
+      color: #ffffff;
+    }
+
+    .tool-selection {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .tool-selection label {
+      font-size: 14px;
+    }
+
+    .tool-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .tool-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #000000;
+    }
+
+    .tool-icon.paint {
+      background-color: #000000;
+    }
+
+    .tool-icon.erase {
+      background-color: #ffffff;
+    }
+
+    .tool-icon.move {
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .tool-option input {
+      display: none;
+    }
+
+    .tool-option.active .tool-icon {
+      box-shadow: 0 0 0 3px #0066ff;
+    }
+
+    .canvas-area {
+      border-top: 2px solid #0066ff;
+      border-bottom: 2px solid #0066ff;
+      height: calc(100vh - 280px);
+      position: relative;
+      overflow: hidden;
+      margin-top: 10px;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+
+    .solution-label {
+      font-size: 14px;
+      margin: 0;
+      padding: 10px 0 0 0;
+      position: relative;
+      z-index: 200;
+    }
+
+    .word-container {
+      position: absolute;
+      top: 50%;
+      left: 80px;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: baseline;
+      z-index: 1;
+      white-space: nowrap;
+    }
+
+    .word-main {
+      font-family: "Salmanazar", sans-serif;
+      font-size: 380px;
+      font-weight: normal;
+      color: #000000;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+
+    .word-in {
+      font-family: "Salmanazar", sans-serif;
+      font-size: 380px;
+      font-weight: normal;
+      color: #000000;
+      cursor: default;
+      pointer-events: auto;
+      position: relative;
+      user-select: none;
+      margin-left: 40px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+
+    .word-in:active {
+      cursor: grabbing;
+    }
+
+    .word-in.dragging {
+      z-index: 1000;
+    }
+
+    .button-container-bottom {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+    }
+
+    .button-container-reset {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+    }
+
+    .save-button {
+      font-family: "CoFoSansMono", monospace;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #e91e8c;
+      border: none;
+      color: #ffffff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .save-button:hover {
+      background-color: #c4177a;
+    }
+
+    .reset-button {
+      font-family: "CoFoSansMono", monospace;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #000000;
+      border: 2px solid #000000;
+      color: #ffffff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .reset-button:hover {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    /* Hide native cursor in canvas area */
+    .canvas-area {
+      cursor: none;
+    }
+
+    .canvas-area .cursor-trail {
+      cursor: none;
+    }
+
+    /* Custom cursor dot */
+    #custom-cursor {
+      position: fixed;
+      width: 36px;
+      height: 36px;
+      background-color: #000000;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%);
+      display: none;
+    }
+
+    #custom-cursor.erase-mode {
+      background-color: #ffffff;
+      border: 2px solid #cccccc;
+    }
+
+    #custom-cursor.move-mode {
+      background-color: transparent;
+      border: none;
+      width: 40px;
+      height: 40px;
+      font-size: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #custom-cursor.move-mode::after {
+      content: '✋';
+    }
+
+    /* Cursor trail dots - permanent */
+    .cursor-trail {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      background-color: #000000;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 100;
+      opacity: 1;
+    }
+
+    .cursor-trail.erase {
+      background-color: #ffffff;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="custom-cursor"></div>
+  <h1>What is your suggestion for a non-binary form?</h1>
+  
+  <div class="top-bar">
+    <div class="word-selection">
+      <label>a) Choose Word</label>
+      <button class="word-btn" onclick="selectWord('Chef in')">Chef in</button>
+      <button class="word-btn" onclick="selectWord('Koch in')">Koch in</button>
+      <button class="word-btn" onclick="selectWord('Kollege in')">Kollege in</button>
+      <button class="word-btn" onclick="selectWord('Freund in')">Freund in</button>
+      <button class="word-btn" onclick="selectWord('Arzt in')">Arzt in</button>
+    </div>
+    <div class="tool-selection">
+      <label>b) Choose Tool:</label>
+      <div class="tool-option active" onclick="selectTool('paint')">
+        <div class="tool-icon paint"></div>
+        <span>Paint</span>
+      </div>
+      <div class="tool-option" onclick="selectTool('erase')">
+        <div class="tool-icon erase"></div>
+        <span>Erase</span>
+      </div>
+      <div class="tool-option" onclick="selectTool('move')">
+        <div class="tool-icon move">✋</div>
+        <span>Move</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="canvas-area" id="canvasArea">
+    <p class="solution-label">c) Your solution</p>
+    <div class="word-container">
+      <span class="word-main" id="wordMain"></span>
+      <span class="word-in" id="wordIn" draggable="false" style="display: none;">in</span>
+    </div>
+  </div>
+
+  <div class="button-container-bottom">
+    <button class="save-button" onclick="savePage()">SAVE</button>
+  </div>
+
+  <div class="button-container-reset">
+    <button class="reset-button" onclick="resetPage()">RESET</button>
+  </div>
+
+  <script>
+    let currentTool = 'paint'; // 'paint' or 'erase'
+    let currentWord = '';
+
+    function selectWord(word) {
+      currentWord = word;
+      // Split word into main part and "in"
+      const mainPart = word.replace(' in', '');
+      document.getElementById('wordMain').textContent = mainPart;
+      
+      // Show and reset "in" position
+      const wordIn = document.getElementById('wordIn');
+      wordIn.style.display = 'inline';
+      wordIn.style.transform = '';
+      wordIn.classList.remove('dragging');
+      
+      // Update button states
+      document.querySelectorAll('.word-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent === word) {
+          btn.classList.add('active');
+        }
+      });
+    }
+
+    function selectTool(tool) {
+      currentTool = tool;
+      
+      // Update tool option states
+      document.querySelectorAll('.tool-option').forEach(opt => {
+        opt.classList.remove('active');
+      });
+      event.currentTarget.classList.add('active');
+
+      // Update cursor appearance
+      const cursor = document.getElementById('custom-cursor');
+      cursor.classList.remove('erase-mode', 'move-mode');
+      if (tool === 'erase') {
+        cursor.classList.add('erase-mode');
+      } else if (tool === 'move') {
+        cursor.classList.add('move-mode');
+      }
+    }
+
+    function resetPage() {
+      // Remove all trail dots
+      document.querySelectorAll('.cursor-trail').forEach(dot => dot.remove());
+      // Reset last position
+      lastX = null;
+      lastY = null;
+      
+      // Reset word selection
+      currentWord = '';
+      document.getElementById('wordMain').textContent = '';
+      document.getElementById('wordIn').style.display = 'none';
+      document.getElementById('wordIn').style.transform = '';
+      
+      // Reset word buttons
+      document.querySelectorAll('.word-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+    }
+
+    function savePage() {
+      // Hide cursor before screenshot
+      customCursor.style.display = 'none';
+      
+      // Take screenshot of canvas area
+      html2canvas(canvasArea, {
+        backgroundColor: '#ffffff',
+        scale: 2 // Higher quality
+      }).then(function(canvas) {
+        // Create download link
+        const link = document.createElement('a');
+        link.download = 'nonbinary-form-' + (currentWord || 'design') + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+
+    // Custom cursor and trail effect
+    const customCursor = document.getElementById('custom-cursor');
+    const canvasArea = document.getElementById('canvasArea');
+    let lastX = null;
+    let lastY = null;
+    let isMouseDown = false;
+    const dotSpacing = 4;
+
+    // Show/hide cursor when entering/leaving canvas area
+    canvasArea.addEventListener('mouseenter', function() {
+      customCursor.style.display = 'block';
+    });
+
+    canvasArea.addEventListener('mouseleave', function() {
+      customCursor.style.display = 'none';
+    });
+
+    // Track mouse button state
+    document.addEventListener('mousedown', function(e) {
+      if (currentTool === 'move') return; // Don't paint in move mode
+      
+      if (canvasArea.contains(e.target) || e.target === canvasArea) {
+        isMouseDown = true;
+        lastX = e.clientX;
+        lastY = e.clientY;
+        createTrailDot(e.clientX, e.clientY);
+      }
+    });
+
+    document.addEventListener('mouseup', function() {
+      isMouseDown = false;
+      lastX = null;
+      lastY = null;
+    });
+
+    document.addEventListener('mousemove', function(e) {
+      const x = e.clientX;
+      const y = e.clientY;
+
+      // Move custom cursor instantly
+      customCursor.style.left = x + 'px';
+      customCursor.style.top = y + 'px';
+
+      // Only draw trail when mouse is pressed, in canvas area, and NOT in move mode
+      if (isMouseDown && currentTool !== 'move' && (canvasArea.contains(e.target) || e.target === canvasArea)) {
+        if (lastX !== null && lastY !== null) {
+          const dx = x - lastX;
+          const dy = y - lastY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          const steps = Math.floor(distance / dotSpacing);
+          for (let i = 0; i <= steps; i++) {
+            const ratio = i / Math.max(steps, 1);
+            const dotX = lastX + dx * ratio;
+            const dotY = lastY + dy * ratio;
+            createTrailDot(dotX, dotY);
+          }
+        }
+        lastX = x;
+        lastY = y;
+      }
+    });
+
+    function createTrailDot(x, y) {
+      const dot = document.createElement('div');
+      dot.className = 'cursor-trail';
+      if (currentTool === 'erase') {
+        dot.classList.add('erase');
+      }
+      // Calculate position relative to canvas
+      const canvasRect = canvasArea.getBoundingClientRect();
+      dot.style.left = (x - canvasRect.left - 18) + 'px';
+      dot.style.top = (y - canvasRect.top - 18) + 'px';
+      canvasArea.appendChild(dot);
+    }
+
+    // Draggable "in" functionality - ONLY in move mode
+    const wordIn = document.getElementById('wordIn');
+    let isDraggingIn = false;
+    let initialX = 0;
+    let initialY = 0;
+    let currentX = 0;
+    let currentY = 0;
+
+    wordIn.addEventListener('mousedown', function(e) {
+      // Only allow dragging in move mode
+      if (currentTool !== 'move') return;
+      
+      e.preventDefault();
+      e.stopPropagation();
+      
+      isDraggingIn = true;
+      
+      // Store the initial mouse position
+      initialX = e.clientX;
+      initialY = e.clientY;
+      
+      // Get current transform values or default to 0
+      const style = window.getComputedStyle(wordIn);
+      const transform = style.transform;
+      
+      if (transform && transform !== 'none') {
+        const matrix = new DOMMatrix(transform);
+        currentX = matrix.m41;
+        currentY = matrix.m42;
+      }
+      
+      wordIn.classList.add('dragging');
+    });
+
+    document.addEventListener('mousemove', function(e) {
+      if (isDraggingIn && currentTool === 'move') {
+        e.preventDefault();
+        
+        const deltaX = e.clientX - initialX;
+        const deltaY = e.clientY - initialY;
+        
+        wordIn.style.transform = `translate(${currentX + deltaX}px, ${currentY + deltaY}px)`;
+      }
+    });
+
+    document.addEventListener('mouseup', function() {
+      if (isDraggingIn) {
+        // Save current position for next drag
+        const style = window.getComputedStyle(wordIn);
+        const transform = style.transform;
+        if (transform && transform !== 'none') {
+          const matrix = new DOMMatrix(transform);
+          currentX = matrix.m41;
+          currentY = matrix.m42;
+        }
+        isDraggingIn = false;
+      }
+    });
+
+  </script>
+</body>
+</html>
