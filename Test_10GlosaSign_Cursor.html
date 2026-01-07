@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCHREIBE ETWAS AUF DEUTSCH</title>
+  <style>
+    @font-face {
+      font-family: "GlosaTextVF";
+      src: url('fonts/GlosaTextVF.woff2') format('woff2'),
+           url('fonts/GlosaTextVF.woff') format('woff'),
+           url('fonts/GlosaTextVF.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    body {
+      font-family:  "GlosaTextVF";
+      margin: 0;
+      padding: 20px;
+      background-color: #ffffff;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      margin: 0 auto;
+      width: 95vw;
+      height: 85vh;
+    }
+    .column {
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      border-top: 6px solid #87882e;
+      border-bottom: 6px solid #87882e;
+      background-color: #ffffff;
+      position: relative;
+    }
+    .button-container {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      gap: 10px;
+    }
+    
+    .feature-button {
+      padding: 12px 24px;
+      font-size: 19.2px;  /* 120% of original 16px */
+      background-color: #000000;
+      border: 2px solid #000000;
+      color: #ffffff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .feature-button:hover {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    #inputText {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0 20px;
+      font-family: "GlosaTextVF", sans-serif;
+      font-size: 100pt;
+      line-height: 1.3;
+      border: none;
+      background-color: #ffffff;
+      outline: none;
+      white-space: pre-wrap;
+      position: relative;
+      overflow: hidden;
+      caret-color: #87882e;
+      animation: blink-caret 1s step-end infinite;
+      font-feature-settings: "ss01" 1;
+      -webkit-font-feature-settings: "ss01" 1;
+      -moz-font-feature-settings: "ss01" 1;
+    }
+
+    @keyframes blink-caret {
+      from, to { caret-color: #87882e}
+      50% { caret-color: transparent; }
+    }
+
+    /* Hide native cursor */
+    * {
+      cursor: none;
+    }
+
+    /* Custom cursor dot */
+    #custom-cursor {
+      position: fixed;
+      width: 24px;
+      height: 24px;
+      background-color: #0066ff;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      filter: blur(2px);
+      transform: translate(-50%, -50%);
+    }
+
+    /* Cursor trail dots */
+    .cursor-trail {
+      position: fixed;
+      width: 24px;
+      height: 24px;
+      background-color: #0066ff;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.5;
+      filter: blur(3px);
+      animation: fade-out 1s forwards;
+    }
+
+    @keyframes fade-out {
+      0% { opacity: 0.5; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1); }
+    }
+
+    #inputDisplay {
+      width: 100%;
+      min-height: 300px;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-family: "GlosaTextVF2";
+      white-space: pre-wrap;
+      overflow-y: auto;
+      font-size: 16px;
+      line-height: 1.4;
+      background-color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <div id="custom-cursor"></div>
+  <h1>SCHREIBE ETWAS AUF DEUTSCH</h1>
+  
+  <div class="container">
+    <div class="column">
+      <div id="inputText" contenteditable="true"></div>
+      <div id="inputDisplay" style="display: none;"></div>
+    </div>
+  </div>
+
+  <div class="button-container">
+    <button class="feature-button" onclick="resetPage()">RESET</button>
+  </div>
+
+  <script>
+    function resetPage() {
+      document.getElementById('inputText').innerHTML = '';
+      window.location.reload(true);
+    }
+    
+    // Auto-focus the input area when page loads
+    window.addEventListener('load', function() {
+      document.getElementById('inputText').focus();
+    });
+
+    // Custom cursor and trail effect
+    const customCursor = document.getElementById('custom-cursor');
+    let lastX = null;
+    let lastY = null;
+    const dotSpacing = 4; // Distance in pixels between each dot
+
+    document.addEventListener('mousemove', function(e) {
+      const x = e.clientX;
+      const y = e.clientY;
+
+      // Move custom cursor instantly
+      customCursor.style.left = x + 'px';
+      customCursor.style.top = y + 'px';
+
+      if (lastX !== null && lastY !== null) {
+        // Calculate distance between last and current position
+        const dx = x - lastX;
+        const dy = y - lastY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        // Create dots along the line between last and current position
+        const steps = Math.floor(distance / dotSpacing);
+        for (let i = 0; i <= steps; i++) {
+          const ratio = i / Math.max(steps, 1);
+          const dotX = lastX + dx * ratio;
+          const dotY = lastY + dy * ratio;
+          createTrailDot(dotX, dotY);
+        }
+      } else {
+        createTrailDot(x, y);
+      }
+
+      lastX = x;
+      lastY = y;
+    });
+
+    function createTrailDot(x, y) {
+      const dot = document.createElement('div');
+      dot.className = 'cursor-trail';
+      dot.style.left = (x - 12) + 'px';
+      dot.style.top = (y - 12) + 'px';
+      document.body.appendChild(dot);
+
+      // Remove the dot after animation completes
+      setTimeout(() => {
+        dot.remove();
+      }, 1000);
+    }
+    
+    let wordList = {};
+    const GITHUB_CSV_URL = 'https://raw.githubusercontent.com/A3g-Design/PostBinaryTypeLab/main/Gegenderte_Begriffe_Schweiz.csv';
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await fetch(GITHUB_CSV_URL);
+        if (!response.ok) throw new Error('Could not load word list');
+        const text = await response.text();
+        
+        const rows = text.split('\n');
+        rows.forEach(row => {
+          if (row.trim()) {
+            const [original, replacement] = row.split(',').map(item => item.trim());
+            if (original && replacement) {
+              const stem = original.toLowerCase().replace(/[*].*$/, '');
+              wordList[stem] = {
+                original: original,
+                replacement: replacement
+              };
+            }
+          }
+        });
+      } catch (error) {
+        console.error('Error loading word list:', error);
+      }
+    });
+
+    function clearText() {
+      document.getElementById('inputText').value = '';
+      document.getElementById('inputDisplay').innerHTML = '';
+      document.getElementById('adaptButton').disabled = true;
+    }
+
+    async function pasteText() {
+      try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById('inputText').value = text;
+      } catch (err) {
+        alert('Failed to paste text. Please paste manually using Ctrl+V or Cmd+V');
+      }
+    }
+
+    function checkText() {
+      const textarea = document.getElementById('inputText');
+      const displayDiv = document.getElementById('inputDisplay');
+      let text = textarea.value;
+      
+      // Hide textarea and show display div
+      textarea.style.display = 'none';
+      displayDiv.style.display = 'block';
+      
+      // Split text into words while preserving spaces and punctuation
+      const words = text.match(/\b\w+\b|\s+|[.,!?;]/g) || [];
+      let highlightedText = '';
+      let hasHighlights = false;
+      
+      words.forEach(word => {
+        const wordLower = word.toLowerCase().trim();
+        if (wordLower) {
+          let found = false;
+          for (const [stem, data] of Object.entries(wordList)) {
+            if (wordLower === stem || wordLower.startsWith(stem)) {
+              highlightedText += `<span class="highlight" title="Wird ersetzt durch: ${data.replacement}">${word}</span>`;
+              found = true;
+              hasHighlights = true;
+              break;
+            }
+          }
+          if (!found) {
+            highlightedText += word;
+          }
+        } else {
+          highlightedText += word;
+        }
+      });
+      
+      displayDiv.innerHTML = highlightedText;
+      document.getElementById('adaptButton').disabled = !hasHighlights;
+    }
+
+    function adaptText() {
+      const inputText = document.getElementById('inputText').value;
+      const words = inputText.match(/\b\w+\b|\s+|[.,!?;]/g) || [];
+      let outputText = '';
+      
+      words.forEach(word => {
+        const wordLower = word.toLowerCase().trim();
+        if (wordLower) {
+          let found = false;
+          for (const [stem, data] of Object.entries(wordList)) {
+            if (wordLower === stem || wordLower.startsWith(stem)) {
+              outputText += data.replacement;
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            outputText += word;
+          }
+        } else {
+          outputText += word;
+        }
+      });
+
+      document.getElementById('inputText').value = outputText;
+    }
+
+  </script>
+</body>
+</html>
