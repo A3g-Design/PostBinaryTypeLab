@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Image Link + Custom Cursor</title>
+  <style>
+    /* Page */
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    /* The single linked image */
+    .hero-link{
+      display: inline-block;
+      line-height: 0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .hero-link img{
+      display: block;
+      max-width: min(1000px, 92vw);
+      height: auto;
+    }
+
+    /* Hide the system cursor on desktop mouse devices */
+    @media (hover: hover) and (pointer: fine) {
+      body { cursor: none; }
+      a, button { cursor: none; }
+    }
+
+    /* Cursor container */
+    .cursor {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+      z-index: 99999;
+    }
+
+    /* 14px black dot */
+    .cursor-dot {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: #000;
+      transform: translate(-50%, -50%);
+      opacity: 1;
+      transition: opacity 140ms ease;
+    }
+
+    /* Ring with lashes container - normal state: 14px */
+    .cursor-ring {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(0,0,0,0.35);
+      transform: translate(-50%, -50%);
+      opacity: 1;
+      transition: width 140ms ease, height 140ms ease;
+    }
+
+    /* 5 lashes on the ring (hidden by default) */
+    .cursor-lash {
+      position: absolute;
+      width: 1.5px;
+      height: 8px;
+      background: rgba(0,0,0,0.35);
+      left: 50%;
+      top: -8px; /* outside the ring */
+      transform-origin: center calc(8px + 14px); /* lash height + center of larger ring (28px / 2) */
+      opacity: 0;
+      transition: opacity 140ms ease;
+    }
+
+    .cursor-lash:nth-child(1) { transform: translateX(-50%) rotate(-40deg); }
+    .cursor-lash:nth-child(2) { transform: translateX(-50%) rotate(-20deg); }
+    .cursor-lash:nth-child(3) { transform: translateX(-50%) rotate(0deg); }
+    .cursor-lash:nth-child(4) { transform: translateX(-50%) rotate(20deg); }
+    .cursor-lash:nth-child(5) { transform: translateX(-50%) rotate(40deg); }
+
+    /* Hover state: ring grows to 28px and show lashes */
+    .cursor.is-eye .cursor-ring {
+      width: 28px;
+      height: 28px;
+    }
+    .cursor.is-eye .cursor-lash { opacity: 1; }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .cursor-eye, .cursor-dot, .cursor-ring { transition: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- One picture as a link -->
+  <a class="hero-link" href="https://www.a3g.ch" target="_blank" rel="noreferrer" aria-label="Open link">
+    <img src="Test2.png" alt="Linked image" />
+  </a>
+
+  <!-- Custom cursor -->
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring">
+      <div class="cursor-lash"></div>
+      <div class="cursor-lash"></div>
+      <div class="cursor-lash"></div>
+      <div class="cursor-lash"></div>
+      <div class="cursor-lash"></div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
+      if (!finePointer) return;
+
+      const cursor = document.getElementById("cursor");
+      const dot = cursor.querySelector(".cursor-dot");
+      const ring = cursor.querySelector(".cursor-ring");
+
+      let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+      let rx = mx, ry = my; // ring lag position
+      let isHovering = false;
+
+      window.addEventListener("mousemove", (e) => {
+        mx = e.clientX;
+        my = e.clientY;
+
+        // dot follows immediately
+        dot.style.left = mx + "px";
+        dot.style.top  = my + "px";
+        
+        // When hovering, ring also follows immediately (no lag)
+        if (isHovering) {
+          rx = mx;
+          ry = my;
+          ring.style.left = mx + "px";
+          ring.style.top  = my + "px";
+        }
+      }, { passive: true });
+
+      function loop() {
+        // ring easing / lag only when NOT hovering
+        if (!isHovering) {
+          const ease = 0.14; // smaller => more lag
+          rx += (mx - rx) * ease;
+          ry += (my - ry) * ease;
+
+          ring.style.left = rx + "px";
+          ring.style.top  = ry + "px";
+        }
+
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+
+      // Turn into eye when hovering the image link
+      const linkEl = document.querySelector(".hero-link");
+      linkEl.addEventListener("mouseenter", () => {
+        isHovering = true;
+        cursor.classList.add("is-eye");
+        // Snap ring to current position immediately
+        rx = mx;
+        ry = my;
+        ring.style.left = mx + "px";
+        ring.style.top  = my + "px";
+      });
+      linkEl.addEventListener("mouseleave", () => {
+        isHovering = false;
+        cursor.classList.remove("is-eye");
+      });
+    })();
+  </script>
+</body>
+</html>
