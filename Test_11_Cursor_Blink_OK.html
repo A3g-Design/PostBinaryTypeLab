@@ -6,6 +6,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Image Link + Custom Cursor</title>
   <style>
+    @font-face {
+      font-family: 'Salmanazar';
+      src: url('205TF-Salmanazar-light.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
     /* Page */
     html, body { height: 100%; }
     body{
@@ -136,10 +142,57 @@
     @media (prefers-reduced-motion: reduce) {
       .cursor-eye, .cursor-dot, .cursor-ring { transition: none; }
     }
+
+    /* Rotating news button */
+    .news-button {
+      position: fixed;
+      top: 100px;
+      left: 100px;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #7b3ba8, #4a1570 60%, #1f0830);
+      box-shadow: 
+        0 0 12px rgba(138, 43, 226, 0.3),
+        inset 0 0 8px rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: spin-clockwise 8s linear infinite;
+      cursor: pointer;
+      text-decoration: none;
+      z-index: 1000;
+    }
+
+    .news-button:hover {
+      box-shadow: 
+        0 0 18px rgba(138, 43, 226, 0.4),
+        inset 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .news-button-text {
+      color: #fff;
+      font-family: 'Salmanazar', sans-serif;
+      font-size: 24px;
+      font-weight: normal;
+      text-align: center;
+      line-height: 1.1;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes spin-clockwise {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 
 <body>
+  <!-- Rotating news button -->
+  <a class="news-button" href="https://www.a3g.ch" target="_blank" rel="noreferrer">
+    <span class="news-button-text">get<br>news!</span>
+  </a>
+
   <!-- One picture as a link -->
   <a class="hero-link" href="https://www.a3g.ch" target="_blank" rel="noreferrer" aria-label="Open link">
     <img src="Test12.png" alt="Linked image" />
