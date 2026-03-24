@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zeichne deinen Vorschlag für eine inklusive Glyphe?</title>
+  <title>What is your suggestion for a non-binary form?</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     @font-face {
@@ -150,7 +150,7 @@
     .word-container {
       position: absolute;
       top: 50%;
-      left: 10px;
+      left: 80px;
       transform: translateY(-50%);
       display: flex;
       align-items: baseline;
@@ -160,7 +160,7 @@
 
     .word-main {
       font-family: "Salmanazar", sans-serif;
-      font-size: 280px;
+      font-size: 380px;
       font-weight: normal;
       color: #000000;
       pointer-events: none;
@@ -172,14 +172,14 @@
 
     .word-in {
       font-family: "Salmanazar", sans-serif;
-      font-size: 280px;
+      font-size: 380px;
       font-weight: normal;
       color: #000000;
       cursor: default;
       pointer-events: auto;
       position: relative;
       user-select: none;
-      margin-left: 160px;
+      margin-left: 40px;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
@@ -248,8 +248,8 @@
     /* Custom cursor dot */
     #custom-cursor {
       position: fixed;
-      width: 25px;
-      height: 25px;
+      width: 36px;
+      height: 36px;
       background-color: #000000;
       border-radius: 50%;
       pointer-events: none;
@@ -281,8 +281,8 @@
     /* Cursor trail dots - permanent */
     .cursor-trail {
       position: absolute;
-      width: 25px;
-      height: 25px;
+      width: 36px;
+      height: 36px;
       background-color: #000000;
       border-radius: 50%;
       pointer-events: none;
@@ -298,11 +298,11 @@
 </head>
 <body>
   <div id="custom-cursor"></div>
-  <h1>Zeichne deinen Vorschlag für eine inklusive Glyphe?</h1>
+  <h1>What is your suggestion for a non-binary form?</h1>
   
   <div class="top-bar">
     <div class="word-selection">
-      <label>a) Wähle ein Wort</label>
+      <label>a) Choose Word</label>
       <button class="word-btn" onclick="selectWord('Chef in')">Chef in</button>
       <button class="word-btn" onclick="selectWord('Koch in')">Koch in</button>
       <button class="word-btn" onclick="selectWord('Kollege in')">Kollege in</button>
@@ -310,7 +310,7 @@
       <button class="word-btn" onclick="selectWord('Arzt in')">Arzt in</button>
     </div>
     <div class="tool-selection">
-      <label>b) Werkzeuge</label>
+      <label>b) Choose Tool:</label>
       <div class="tool-option active" onclick="selectTool('paint')">
         <div class="tool-icon paint"></div>
         <span>Paint</span>
@@ -327,7 +327,7 @@
   </div>
 
   <div class="canvas-area" id="canvasArea">
-    <p class="solution-label">c) Deine Lösung</p>
+    <p class="solution-label">c) Your solution</p>
     <div class="word-container">
       <span class="word-main" id="wordMain"></span>
       <span class="word-in" id="wordIn" draggable="false" style="display: none;">in</span>
@@ -429,7 +429,6 @@
     let lastY = null;
     let isMouseDown = false;
     const dotSpacing = 4;
-    const trailDotHalf = 14;
 
     // Show/hide cursor when entering/leaving canvas area
     canvasArea.addEventListener('mouseenter', function() {
@@ -494,8 +493,8 @@
       }
       // Calculate position relative to canvas
       const canvasRect = canvasArea.getBoundingClientRect();
-      dot.style.left = (x - canvasRect.left - trailDotHalf) + 'px';
-      dot.style.top = (y - canvasRect.top - trailDotHalf) + 'px';
+      dot.style.left = (x - canvasRect.left - 18) + 'px';
+      dot.style.top = (y - canvasRect.top - 18) + 'px';
       canvasArea.appendChild(dot);
     }
 
