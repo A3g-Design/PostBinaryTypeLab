@@ -271,10 +271,10 @@
       font-size: 14px;
     }
     
-    /* Print styles - Präzise 36mm Höhe */
+    /* Print styles - Präzise 27mm Höhe */
     @media print {
       @page {
-        size: 57mm 33mm;
+        size: 57mm 27mm;
         margin: 0 !important;
         padding: 0 !important;
         page-break-after: avoid;
@@ -286,11 +286,11 @@
       
       html {
         width: 57mm !important;
-        height: 33mm !important;
+        height: 27mm !important;
         max-width: 57mm !important;
-        max-height: 36mm !important;
+        max-height: 27mm !important;
         min-width: 57mm !important;
-        min-height: 36mm !important;
+        min-height: 27mm !important;
         margin: 0 !important;
         padding: 0 !important;
         overflow: hidden !important;
@@ -302,11 +302,11 @@
         padding: 0 !important;
         background: white !important;
         width: 57mm !important;
-        height: 36mm !important;
+        height: 27mm !important;
         max-width: 57mm !important;
-        max-height: 36mm !important;
+        max-height: 27mm !important;
         min-width: 57mm !important;
-        min-height: 36mm !important;
+        min-height: 27mm !important;
         overflow: hidden !important;
         page-break-after: avoid !important;
         page-break-before: avoid !important;
@@ -333,11 +333,11 @@
         margin: 0 !important;
         padding: 0 !important;
         width: 57mm !important;
-        height: 36mm !important;
+        height: 27mm !important;
         max-width: 57mm !important;
-        max-height: 36mm !important;
+        max-height: 27mm !important;
         min-width: 57mm !important;
-        min-height: 36mm !important;
+        min-height: 27mm !important;
         position: static !important;
         top: 0 !important;
         left: 0 !important;
@@ -352,11 +352,11 @@
       
       .column {
         width: 57mm !important;
-        height: 36mm !important;
+        height: 27mm !important;
         max-width: 57mm !important;
-        max-height: 36mm !important;
+        max-height: 27mm !important;
         min-width: 57mm !important;
-        min-height: 36mm !important;
+        min-height: 27mm !important;
         padding: 0 !important;
         margin: 0 !important;
         border: none !important;
@@ -372,11 +372,11 @@
       
       .text-container {
         width: 57mm !important; 
-        height: 36mm !important; 
+        height: 27mm !important; 
         max-width: 57mm !important;
-        max-height: 36mm !important;
+        max-height: 27mm !important;
         min-width: 57mm !important;
-        min-height: 36mm !important;
+        min-height: 27mm !important;
         margin: 0 !important;
         border: none !important;
         border-radius: 0 !important;
@@ -395,26 +395,30 @@
 
       .text-container-fixed {
         position: absolute !important;
-        bottom: 1.5mm !important;
+        bottom: 1mm !important;
         left: 0 !important;
         right: 0 !important;
+        height: 3.5mm !important;
+        line-height: 3.5mm !important;
         text-align: center !important;
         font-family: "CoFoSansMono-Regular", monospace !important;
         font-size: 8pt !important;
         color: #000000 !important;
         display: block !important;
         visibility: visible !important;
+        overflow: visible !important;
+        z-index: 2 !important;
       }
      
      #inputText {
        width: 100% !important;
        height: 100% !important;
        max-width: 57mm !important;
-       max-height: 30mm !important;
-       padding: 0 !important;
+       max-height: 27mm !important;
+       padding: 0 0 4.5mm 0 !important;
        margin: 0 !important;
-       /* Präzise Schriftgröße für 36mm Höhe */
-       font-size: calc(30mm * 0.23) !important; /* ~7.6mm Schriftgröße */
+       /* Präzise Schriftgröße für 27mm Höhe, Platz für Footer */
+       font-size: calc(27mm * 0.23) !important;
        line-height: 1.2 !important;
        border: none !important;
        background: transparent !important;
@@ -440,7 +444,7 @@
        visibility: hidden !important;
      }
      
-     /* PRÄZISE Seitenkontrolle für 36mm - behält Screen-Layout bei */
+     /* PRÄZISE Seitenkontrolle für 27mm - behält Screen-Layout bei */
      * {
        -webkit-print-color-adjust: exact !important;
        color-adjust: exact !important;
@@ -452,7 +456,7 @@
      /* Strikte Seitengrößenkontrolle */
      @page :first {
        margin: 0 !important;
-       size: 57mm 36mm !important;
+       size: 57mm 27mm !important;
      }
      
      /* Hide everything else completely */
