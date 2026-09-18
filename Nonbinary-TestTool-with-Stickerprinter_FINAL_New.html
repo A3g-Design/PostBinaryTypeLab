@@ -73,7 +73,7 @@
       margin-top: 8px;
       border: 2px dashed #223d35;
       border-radius: 20px;
-      padding: 15px;
+      padding: 4px 15px 15px 15px;
       background-color: #ffffff;
       position: relative;
     }
@@ -199,7 +199,7 @@
       padding: 0 0 18px 0;
       font-family: "DottivettiNB2", sans-serif;
       font-size: clamp(18px, 9vw, 90pt);
-      line-height: 1.0;
+      line-height: 0.5;
       border: none;
       background-color: transparent;
       outline: none;
@@ -214,6 +214,10 @@
       word-wrap: break-word;
       overflow-wrap: break-word;
       text-align: center; 
+    }
+
+    #inputText::first-line {
+      line-height: 0.5;
     }
 
     @keyframes blink-caret {
@@ -419,7 +423,7 @@
        margin: 0 !important;
        /* Präzise Schriftgröße für 27mm Höhe, Platz für Footer */
        font-size: calc(27mm * 0.27) !important;
-       line-height: 1.0 !important;
+       line-height: 0.5 !important;
        border: none !important;
        background: transparent !important;
        color: black !important;
@@ -437,6 +441,10 @@
        page-break-inside: avoid !important;
        orphans: 99 !important;
        widows: 99 !important;
+     }
+
+     #inputText::first-line {
+       line-height: 0.5 !important;
      }
      
      #inputDisplay {
