@@ -274,7 +274,7 @@
     /* Print styles - Präzise 27mm Höhe */
     @media print {
       @page {
-        size: 57mm 27mm;
+        size: 56mm 27mm;
         margin: 0 !important;
         padding: 0 !important;
         page-break-after: avoid;
@@ -285,11 +285,11 @@
       }
       
       html {
-        width: 57mm !important;
+        width: 56mm !important;
         height: 27mm !important;
-        max-width: 57mm !important;
+        max-width: 56mm !important;
         max-height: 27mm !important;
-        min-width: 57mm !important;
+        min-width: 56mm !important;
         min-height: 27mm !important;
         margin: 0 !important;
         padding: 0 !important;
@@ -301,11 +301,11 @@
         margin: 0 !important;
         padding: 0 !important;
         background: white !important;
-        width: 57mm !important;
+        width: 56mm !important;
         height: 27mm !important;
-        max-width: 57mm !important;
+        max-width: 56mm !important;
         max-height: 27mm !important;
-        min-width: 57mm !important;
+        min-width: 56mm !important;
         min-height: 27mm !important;
         overflow: hidden !important;
         page-break-after: avoid !important;
@@ -332,11 +332,11 @@
       .container {
         margin: 0 !important;
         padding: 0 !important;
-        width: 57mm !important;
+        width: 56mm !important;
         height: 27mm !important;
-        max-width: 57mm !important;
+        max-width: 56mm !important;
         max-height: 27mm !important;
-        min-width: 57mm !important;
+        min-width: 56mm !important;
         min-height: 27mm !important;
         position: static !important;
         top: 0 !important;
@@ -351,11 +351,11 @@
       }
       
       .column {
-        width: 57mm !important;
+        width: 56mm !important;
         height: 27mm !important;
-        max-width: 57mm !important;
+        max-width: 56mm !important;
         max-height: 27mm !important;
-        min-width: 57mm !important;
+        min-width: 56mm !important;
         min-height: 27mm !important;
         padding: 0 !important;
         margin: 0 !important;
@@ -371,11 +371,11 @@
       }
       
       .text-container {
-        width: 57mm !important; 
+        width: 56mm !important; 
         height: 27mm !important; 
-        max-width: 57mm !important;
+        max-width: 56mm !important;
         max-height: 27mm !important;
-        min-width: 57mm !important;
+        min-width: 56mm !important;
         min-height: 27mm !important;
         margin: 0 !important;
         border: none !important;
@@ -413,12 +413,12 @@
      #inputText {
        width: 100% !important;
        height: 100% !important;
-       max-width: 57mm !important;
+       max-width: 56mm !important;
        max-height: 27mm !important;
        padding: 0 0 4.5mm 0 !important;
        margin: 0 !important;
-       /* Präzise Schriftgröße für 27mm Höhe, Platz für Footer */
-       font-size: calc(27mm * 0.27) !important;
+       /* Match screen: font is ~16–22% of the box width (90pt in the 60/27 preview) */
+       font-size: calc(56mm * 0.22) !important;
        line-height: 1.1 !important;
        border: none !important;
        background: transparent !important;
@@ -456,7 +456,7 @@
      /* Strikte Seitengrößenkontrolle */
      @page :first {
        margin: 0 !important;
-       size: 57mm 27mm !important;
+       size: 56mm 27mm !important;
      }
      
      /* Hide everything else completely */
